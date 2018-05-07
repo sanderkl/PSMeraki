@@ -36,6 +36,7 @@ function Get-MrkOrgEndpoint {
 }
 
 function Set-MrkRestApiKey {
+
     <#
     .SYNOPSIS
     Sets a Meraki Rest API key for a powershell session
@@ -49,7 +50,10 @@ function Set-MrkRestApiKey {
     .PARAMETER key
     40 characters 0-9 a-f key that represents a logged in Meraki dashboard user 
     #>
-    [CmdletBinding(SupportsShouldProcess, ConfirmImpact='Medium')]
+
+# https://blogs.technet.microsoft.com/heyscriptingguy/2011/05/18/real-world-powershell-tips-from-a-2011-scripting-games-winner/
+
+    [CmdletBinding(SupportsShouldProcess)]
     Param (
         [String]$key
     )
