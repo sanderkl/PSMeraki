@@ -54,8 +54,8 @@ function Set-MrkRestApiKey {
         [String]$key
     )
     if (!$mrkRestApiKey){
-        $script:mrkRestApiKey = Read-host Enter Meraki REST API key 
-        Write-Host To change the key in this session`, use  Set-MrkRestApiKey `<key`>    
+        $script:mrkRestApiKey = (Read-host Enter Meraki REST API key).Trim()
+        Write-Host Key set`, to change the key in this session`, use  Set-MrkRestApiKey `<key`>    
     } 
     if ($key){
         $script:mrkRestApiKey = $key
@@ -643,4 +643,4 @@ function Remove-MrkNetworkVLAN { # UNTESTED
     return $request
 }
 
-Write-Host Meraki Module loaded`, to list all commands use: Get-Command `-Module Meraki
+Write-Host Meraki Module loaded`, to list all commands use: Get-Command `-Module Meraki `- Sander Klaassen May2018
