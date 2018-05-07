@@ -29,8 +29,6 @@ function Get-MrkRestApiHeader {
 
 function Get-MrkOrgEndpoint {
     $orgURI = 'https://api.meraki.com/api/v0/organizations'
-    $header = Get-MrkRestApiHeader
-#Write-Host orgEnd $header.ToType()
     $webRequest = Invoke-WebRequest -uri $orgURI -Method GET -Headers (Get-MrkRestApiHeader)
     $redirectedURL = $webRequest.BaseResponse.ResponseUri.AbsoluteUri
     $redirectedURLBase = $redirectedURL.Replace('/organizations','')
