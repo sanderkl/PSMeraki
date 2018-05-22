@@ -36,7 +36,6 @@ function Get-MrkOrgEndpoint {
 }
 
 function Set-MrkRestApiKey {
-
     <#
     .SYNOPSIS
     Sets a Meraki Rest API key for a powershell session
@@ -51,7 +50,7 @@ function Set-MrkRestApiKey {
     40 characters 0-9 a-f key that represents a logged in Meraki dashboard user 
     #>
 
-# https://blogs.technet.microsoft.com/heyscriptingguy/2011/05/18/real-world-powershell-tips-from-a-2011-scripting-games-winner/
+    #https://blogs.technet.microsoft.com/heyscriptingguy/2011/05/18/real-world-powershell-tips-from-a-2011-scripting-games-winner/
 
     [CmdletBinding(SupportsShouldProcess)]
     Param (
@@ -69,8 +68,6 @@ function Set-MrkRestApiKey {
         Write-Host REST API Key is invalid
         break
     }
-    
-   
 } 
 
 function Test-MrkRestApiKey {
