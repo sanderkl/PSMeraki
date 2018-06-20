@@ -43,30 +43,32 @@ function Set-MrkRestApiKey {
     REST API key is unique for each Meraki dashboard user. the REST API should be enabled organization wide, a dashboard user is able to create a key
     more info https://documentation.meraki.com/zGeneral_Administration/Other_Topics/The_Cisco_Meraki_Dashboard_API
     .EXAMPLE
-    Get-MrkNetwork 
+    Set-MrkRestApiKey 
     .EXAMPLE
-    Get-MrkNetwork 1234567890abcdefabcd1234567890abcdefabcd
+    Set-MrkRestApiKey -key 1234567890abcdefabcd1234567890abcdefabcd
     .PARAMETER key
     40 characters 0-9 a-f key that represents a logged in Meraki dashboard user 
+    .Notes
     #>
-
     #https://blogs.technet.microsoft.com/heyscriptingguy/2011/05/18/real-world-powershell-tips-from-a-2011-scripting-games-winner/
 
-    [CmdletBinding(SupportsShouldProcess)]
+    [CmdletBinding()]
     Param (
         [String]$key
     )
-    if (!$mrkRestApiKey){
-        $script:mrkRestApiKey = (Read-host Enter Meraki REST API key).Trim()
-        Write-Host Key set`, to change the key in this session`, use  Set-MrkRestApiKey `<key`>    
-    } 
     if ($key){
-        $script:mrkRestApiKey = $key
-        Write-Host New Key set
-    }
-    if (!(Test-MrkRestApiKey -apiKey $mrkRestApiKey)){
-        Write-Host REST API Key is invalid
-        break
+        if (!(Test-MrkRestApiKey -apiKey $key)){
+            Write-Host REST API Key is invalid
+            break
+        } Else {
+            $script:mrkRestApiKey = $key
+            Write-Host New Key set
+        }
+    } Else {
+        if (!$mrkRestApiKey){
+            $script:mrkRestApiKey = (Read-host Enter Meraki REST API key).Trim()
+            Write-Host Key set`, to change the key in this session`, use  Set-MrkRestApiKey `<key`>    
+        } 
     }
 } 
 
@@ -78,7 +80,7 @@ function Test-MrkRestApiKey {
         [Parameter()][string]$apiKey
     )
     if ($apiKey.Length -ne 40){
-        Write-Output "key length is not 40 bytes`, aborting.."
+        Write-Output "key length is not 40 bytes long`, aborting.."
         break 
     }
     return $true
@@ -421,7 +423,7 @@ function New-MrkNetwork {
     .PARAMETER OrgID
     optional parameter is a decimal number representing your organization. if this parameter is not specified it will use Get-MrkFirstOrgID to retreive the organization number
     #>
-    [CmdletBinding(SupportsShouldProcess, ConfirmImpact='Medium')]
+    [CmdletBinding()]
     Param (
         [Parameter()][String]$OrgId = (Get-MrkFirstOrgID),
         [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$Name,
@@ -450,7 +452,7 @@ function Set-MrkNetworkToTemplate {
     .PARAMETER TemplateId 
     specify a templateID, find an id using get-MrkTemplates
     #>
-    [CmdletBinding(SupportsShouldProcess, ConfirmImpact='Medium')]
+    [CmdletBinding()]
     Param (
         [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$networkID,
         [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$templateID
@@ -476,7 +478,7 @@ function New-MrkDevice {
     .PARAMETER SerialNr 
     Serial number of the physical device that is added to the network. 
     #>
-    [CmdletBinding(SupportsShouldProcess, ConfirmImpact='Medium')]
+    [CmdletBinding()]
     Param (
         [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$Networkid,
         [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$SerialNr
@@ -501,7 +503,7 @@ function Update-MrkDevice {
     .PARAMETER SerialNr 
     Serial number of the physical device that is added to the network. 
     #>
-    [CmdletBinding(SupportsShouldProcess, ConfirmImpact='Medium')]
+    [CmdletBinding()]
     Param (
         [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$Networkid,
         [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$SerialNr,
@@ -531,7 +533,7 @@ function Remove-MrkDevice {
     .PARAMETER SerialNr 
     Serial number of the physical device that is added to the network. 
     #>
-    [CmdletBinding(SupportsShouldProcess, ConfirmImpact='Medium')]
+    [CmdletBinding()]
     Param (
         [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$Networkid,
         [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$SerialNr
@@ -559,7 +561,7 @@ function Add-MrkNetworkVLAN { # UNTESTED
     .PARAMETER applianceIP
     The local IP of the appliance on the VLAN 
     #>
-    [CmdletBinding(SupportsShouldProcess, ConfirmImpact='Medium')]
+    [CmdletBinding()]
     Param (
         [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$Networkid,
         [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$Id,
@@ -597,7 +599,7 @@ function Update-MrkNetworkVLAN { # UNTESTED
     .PARAMETER applianceIP
     The local IP of the appliance on the VLAN 
     #>
-    [CmdletBinding(SupportsShouldProcess, ConfirmImpact='Medium')]
+    [CmdletBinding()]
     Param (
         [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$Networkid,
         [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$Id,
@@ -635,7 +637,7 @@ function Remove-MrkNetworkVLAN { # UNTESTED
     .PARAMETER applianceIP
     The local IP of the appliance on the VLAN 
     #>
-    [CmdletBinding(SupportsShouldProcess, ConfirmImpact='Medium')]
+    [CmdletBinding()]
     Param (
         [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$Networkid,
         [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$Id
