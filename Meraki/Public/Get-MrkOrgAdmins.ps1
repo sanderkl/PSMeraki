@@ -1,4 +1,4 @@
-function Get-MrkAdmins {
+function Get-MrkOrgAdmins {
     <#
     .SYNOPSIS
     Retrieves all meraki admins for an organization
