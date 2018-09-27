@@ -1,10 +1,10 @@
-function Update-MrkOrgAdmin {
+function Update-MrkOrgAdmin { # UNTESTED
     <#
     .SYNOPSIS
     Creates new dashboard Admin 
     .DESCRIPTION
     .EXAMPLE
-    Update-MrkOrgAdmin -AdminId 681169443639837138 -Name 'Piet Test2' -email 'piet2@Test.com' -orgAccess 'read-only'
+    New-MrkOrgAdmin -Name 'Piet Test' -email 'piets@Test.com' -orgAccess 'read-only'
     .PARAMETER OrgId 
     defaults to Get-MrkFirstOrgID, for admins who maintain multiple organizations, OrgID can be specified
     .PARAMETER Name
@@ -19,7 +19,6 @@ function Update-MrkOrgAdmin {
     [CmdletBinding()]
     Param (
         [Parameter()][String]$OrgId = (Get-MrkFirstOrgID),
-        [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$AdminId,
         [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$Name,
         [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$email,
         [Parameter(Mandatory)][ValidateSet('full','read-only','none')][String]$orgAccess,
@@ -31,6 +30,6 @@ function Update-MrkOrgAdmin {
         "orgAccess" = $orgAccess
         "Tags" = $tags
     }
-    $request = Invoke-MrkRestMethod -Method PUT -ResourceID ('/organizations/' + $OrgId + '/admins/' + $AdminId) -Body $body  
+    $request = Invoke-MrkRestMethod -Method POST -ResourceID ('/organizations/' + $OrgId + '/admins/') -Body $body  
     return $request
 }
