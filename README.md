@@ -1,5 +1,5 @@
 # PSMeraki
-This is a PowerShell module around the documented Meraki Rest API functions [link](https://documenter.getpostman.com/view/897512/meraki-dashboard-api/2To9xm#a5b91474-d9da-c345-cf0e-5c828475686d). Only a limited number of meraki rest API functions have been integrated.
+This is a PowerShell module around the documented Meraki Rest API functions \([link](https://documenter.getpostman.com/view/897512/meraki-dashboard-api/2To9xm#a5b91474-d9da-c345-cf0e-5c828475686d)\). Only a limited number of meraki rest API functions have been integrated.
 
 # Install 
 Download and extract the zip file. Copy 'PSmeraki' directory to a module path. 
