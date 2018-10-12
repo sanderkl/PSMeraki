@@ -23,13 +23,13 @@ function Add-MrkNetworkVLAN { # UNTESTED
         [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$Id,
         [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$Name,
         [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$Subnet,
-        [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$applicanceIP
+        [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$applianceIP
     )
     $body  = @{
         "id" = $Id
         "networkId" = $Networkid
         "name" = $Name
-        "applianceIp" = $applicanceIP
+        "applianceIp" = $applianceIP
         "subnet" = $Subnet
     }
     $request = Invoke-MrkRestMethod -Method POST -ResourceID ('/networks/' + $Networkid + '/vlans') -Body $body  

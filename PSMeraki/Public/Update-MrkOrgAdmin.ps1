@@ -1,10 +1,10 @@
-function Update-MrkOrgAdmin { # UNTESTED
+function Update-MrkOrgAdmin {
     <#
     .SYNOPSIS
     Creates new dashboard Admin 
     .DESCRIPTION
     .EXAMPLE
-    New-MrkOrgAdmin -Name 'Piet Test' -email 'piets@Test.com' -orgAccess 'read-only'
+    Update-MrkOrgAdmin -Name 'Piet Test' -email 'piets@Test.com' -orgAccess 'read-only'
     .PARAMETER OrgId 
     defaults to Get-MrkFirstOrgID, for admins who maintain multiple organizations, OrgID can be specified
     .PARAMETER Name
@@ -15,6 +15,8 @@ function Update-MrkOrgAdmin { # UNTESTED
     Access for the admin either 'full' 'read-only' or 'none'. If its 'none' tags specify the permissions. 
     .PARAMETER tags
     see rest api diucs for details.
+    .NOTES
+    This function is untested
     #>
     [CmdletBinding()]
     Param (

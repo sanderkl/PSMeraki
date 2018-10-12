@@ -4,11 +4,13 @@ function Get-MrkNetworkBluetoothClient {
     Retrieves all bluetooth clients on a Meraki network
     .DESCRIPTION
     .EXAMPLE
-    Get-MrkNetworkDevice -networkID X_112233445566778899
+    Get-MrkNetworkBluetoothClient -networkID X_112233445566778899
     .PARAMETER networkID
     specify a networkID, to find one use get-MrkNetworks
     .PARAMETER ClientID
     specify a ClientID, to find one use get-MrkNetworkBluetoothClients (?)
+    .NOTES
+    Thsi function is untested
     #>
     [CmdletBinding()]
     Param (

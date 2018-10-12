@@ -5,20 +5,20 @@ function New-MrkDevice {
     .DESCRIPTION
     blah 
     .EXAMPLE
-    New-MerakiDevice -Networkid X_111122223639801111 -Serial Q2XX-XXXX-XXXX
-    .PARAMETER Networkid 
-    id of a network (get-MrkNetworks)[0].id
+    New-MrkDevice -Networkid X_111122223639801111 -Serial Q2XX-XXXX-XXXX
+    .PARAMETER NetworkId 
+    id of a network get one using: (Get-MrkNetwork).id
     .PARAMETER SerialNr 
     Serial number of the physical device that is added to the network. 
     #>
     [CmdletBinding()]
     Param (
-        [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$Networkid,
+        [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$NetworkId,
         [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$SerialNr
     )
     $body = @{
         "serial"=$SerialNr
     }
-    $request = Invoke-MrkRestMethod -Method POST -ResourceID ('/networks/' + $Networkid + '/devices/claim') -Body $body  
+    $request = Invoke-MrkRestMethod -Method POST -ResourceID ('/networks/' + $NetworkId + '/devices/claim') -Body $body  
     return $request
 }

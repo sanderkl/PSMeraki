@@ -6,15 +6,12 @@ function Set-MrkRestApiKey {
     REST API key is unique for each Meraki dashboard user. the REST API should be enabled organization wide, a dashboard user is able to create a key
     more info https://documentation.meraki.com/zGeneral_Administration/Other_Topics/The_Cisco_Meraki_Dashboard_API
     .EXAMPLE
-    Get-MrkNetwork 
+    Set-MrkRestApiKey 
     .EXAMPLE
-    Get-MrkNetwork 1234567890abcdefabcd1234567890abcdefabcd
+    Set-MrkRestApiKey 1234567890abcdefabcd1234567890abcdefabcd
     .PARAMETER key
     40 characters 0-9 a-f key that represents a logged in Meraki dashboard user 
     #>
-
-    #https://blogs.technet.microsoft.com/heyscriptingguy/2011/05/18/real-world-powershell-tips-from-a-2011-scripting-games-winner/
-
     [CmdletBinding()]
     Param (
         [String]$key

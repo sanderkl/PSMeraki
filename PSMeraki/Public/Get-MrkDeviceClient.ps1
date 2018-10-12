@@ -6,7 +6,7 @@ function Get-MrkDeviceClient {
     Gets a list of all Clients connected to a Meraki device, connected in the last month.
     .EXAMPLE
     Get-MrkDeviceClient -Serial Q2XX-XXXX-XXXX
-    .PARAMETER DeviceSerial
+    .PARAMETER Serial
     specify a DeviceSerial, find a serial number using Get-MrkNetworkDevices
     #>
     [CmdletBinding()]
