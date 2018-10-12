@@ -1,17 +1,17 @@
 # PSMeraki
-This is a PowerShell module around the documented Meraki Rest API functions \([link](https://documenter.getpostman.com/view/897512/meraki-dashboard-api/2To9xm#a5b91474-d9da-c345-cf0e-5c828475686d)\). Only a limited number of meraki rest API functions have been integrated.
+This is a PowerShell module around the documented Meraki Rest API functions \([link](https://documenter.getpostman.com/view/897512/meraki-dashboard-api/2To9xm#a5b91474-d9da-c345-cf0e-5c828475686d)\). Only a limited number of meraki rest API functions have been implemented.
 
 # Install 
 Download and extract the zip file. Copy 'PSmeraki' directory to a module path. 
 These are the default values for PSModulepath:
-- C:\Users\<username>\Documents\WindowsPowerShell\Modules;
+- C:\Users\\<username>\Documents\WindowsPowerShell\Modules;
 - C:\Program Files\WindowsPowerShell\Modules;
 - C:\WINDOWS\system32\WindowsPowerShell\v1.0\Modules
 
 Type in powershell: 
-import-module PSmeraki
+`Import-Module PSmeraki`
 
-running 'Get-mrkNetwork' will ask for a Meraki API key. 
+running `Get-mrkNetwork` will ask for a Meraki API key. 
 
 Two things have to be configured in the Meraki dashboard:
 1. Enable Rest API access, organization wide
@@ -20,7 +20,7 @@ Two things have to be configured in the Meraki dashboard:
 login to the Meraki dashboard 
 https://account.meraki.com/secure/login/dashboard_login
 
-## Enable Rest API
+## Enable Rest API Access
 
 API key has to be organization wide enabled, to do that, go to organization settings
 
