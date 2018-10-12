@@ -2,14 +2,17 @@
 This is a PowerShell module around the documented Meraki Rest API functions \([link](https://documenter.getpostman.com/view/897512/meraki-dashboard-api/2To9xm#a5b91474-d9da-c345-cf0e-5c828475686d)\). Only a limited number of meraki rest API functions have been implemented.
 
 # Install 
-Download and extract the zip file. Copy 'PSmeraki' directory to a module path. 
+Download and extract the zip file. 
+
+Copy 'PSmeraki' directory to a module path. 
 These are the default values for PSModulepath:
 - C:\Users\\<username>\Documents\WindowsPowerShell\Modules;
 - C:\Program Files\WindowsPowerShell\Modules;
 - C:\WINDOWS\system32\WindowsPowerShell\v1.0\Modules
 
 Type in powershell: 
-`Import-Module PSmeraki`
+
+`Import-Module PSMeraki`
 
 running `Get-mrkNetwork` will ask for a Meraki API key. 
 
