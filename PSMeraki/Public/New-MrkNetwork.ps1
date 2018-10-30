@@ -23,7 +23,7 @@ function New-MrkNetwork {
     Param (
         [Parameter()][String]$OrgId = (Get-MrkFirstOrgID),
         [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$Name,
-        [Parameter(Mandatory)][ValidateSet('wireless','switch','appliance','phone','combined')][String]$Type,
+        [Parameter(Mandatory)][ValidateSet('wireless','switch','appliance','phone','appliance switch wireless')][String]$Type,
         [Parameter(Mandatory)][String]$TimeZone,
         [Parameter()][String]$Tags
     )
