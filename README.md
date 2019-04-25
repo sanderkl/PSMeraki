@@ -5,7 +5,10 @@ This is a PowerShell module around the documented Meraki Rest API functions \([l
 ## Install
 
 *new in APR 2019:
+
+```powershell
 Install-Module -Name PSMeraki
+```
 
 Downloads and installs the module from PSGallery
 
