@@ -11,8 +11,15 @@ function Get-MrkNetworkVLAN {
     #>
     [CmdletBinding()]
     Param (
-        [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$networkID
+        [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$networkID,
+        [parameter()]$id
     )
-    $request = Invoke-MrkRestMethod -Method GET -ResourceID ('/networks/' + $networkID + '/vlans')
+
+    if ($null -eq $id -or "" -eq $id){
+        $request = Invoke-MrkRestMethod -Method GET -ResourceID ('/networks/' + $networkID + '/vlans')
+    }else{
+        $request = Invoke-MrkRestMethod -Method GET -ResourceID ('/networks/' + $networkID + '/vlans/' + $id)
+    }
+  
     return $request
 }

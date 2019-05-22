@@ -8,5 +8,6 @@ function Get-MrkOrgEndpoint {
     $webRequest = Invoke-WebRequest -uri $orgURI -Method GET -Headers (Get-MrkRestApiHeader)
     $redirectedURL = $webRequest.BaseResponse.ResponseUri.AbsoluteUri
     $redirectedURLBase = $redirectedURL.Replace('/organizations','')
+    $global:orgBaseUri = $redirectedURLBase
     Return $redirectedURLBase
 }

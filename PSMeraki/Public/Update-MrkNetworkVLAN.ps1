@@ -16,23 +16,44 @@ function Update-MrkNetworkVLAN {
     The subnet of the VLAN 
     .PARAMETER applianceIP
     The local IP of the appliance on the VLAN 
+    .PARAMETER dnsNameservers
+    valid dnsNameservers values are:
+        "upstream_dns"
+        "opendns"
+        "google_dns"
+        "[ipv4]\n[ipv4]\n[ipv4]..."
+    .PARAMETER reservedIpRanges
+    the reservedIpRanges is an array object where each entry is a fixed format:
+    "reservation1","reservation2"
+     "start-ip1,end-ip1,description1","start-ip2,end-ip2,description2",etc
+    .PARAMETER dhcpHandling
+    parameter to set dhcp service on or off. By default the meraki MX servers as a dhcp server for each VLAN.
+    the setting can be "Do not respond to DHCP requests", "Run a DHCP server", or a 
     .Notes
-    This function is untested
+    
     #>
     [CmdletBinding()]
     Param (
-        [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$Networkid,
-        [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$Id,
-        [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$Name,
-        [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$Subnet,
-        [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$applianceIP
+        [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$networkId,
+        [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$id,
+        [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$name,
+        [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$subnet,
+        [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$applianceIp,
+        [Parameter()][string]$dnsNameservers,
+        [Parameter()][array]$reservedIpRanges,
+        [Parameter()][ValidateSet("","Do not respond to DHCP requests", "Run a DHCP server")]
+        [string]$dhcpHandling
     )
+    
     $body  = @{
         "id" = $Id
-        "networkId" = $Networkid
-        "name" = $Name
+        "networkId" = $networkId
+        "name" = $name
         "applianceIp" = $applianceIP
-        "subnet" = $Subnet
+        "subnet" = $subnet
+        "dnsNameservers" = $dnsNameservers
+        "reservedIpRanges" = $reservedIpRanges
+        "dhcpHandling" = $dhcpHandling
     }
     $request = Invoke-MrkRestMethod -Method Put -ResourceID ('/networks/' + $Networkid + '/vlans/' + $Id) -Body $body  
     return $request
