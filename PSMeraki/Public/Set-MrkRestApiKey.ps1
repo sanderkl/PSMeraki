@@ -16,15 +16,15 @@ function Set-MrkRestApiKey {
     Param (
         [String]$key
     )
-    if ($key){
-        $script:mrkRestApiKey = $key
-        Write-Host New Key set
-    }
     if (!$mrkRestApiKey){
-        $script:mrkRestApiKey = (Read-host Enter Meraki REST API key).Trim()
+        $global:mrkRestApiKey = (Read-host Enter Meraki REST API key).Trim()
         Write-Host Key set`, to change the key in this session`, use  Set-MrkRestApiKey `<key`>    
     } 
-
+    if ($key){
+        $global:mrkRestApiKey = $key
+        Write-Host New Key set, invoking get-mrkOrgEndpoint
+        Get-MrkOrgEndpoint
+    }
     if (!(Test-MrkRestApiKey -apiKey $mrkRestApiKey)){
         Write-Host REST API Key is invalid
         break

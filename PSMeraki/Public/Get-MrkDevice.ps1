@@ -12,8 +12,12 @@ function Get-MrkDevice {
     [CmdletBinding()]
     Param (
         [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$networkID,
-        [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$Serial
+        [Parameter()][Alias("serialNr")][String]$serial
     )
-    $request = Invoke-MrkRestMethod -Method GET -ResourceID ('/networks/' + $networkID + '/devices/' + $Serial)
+    if($serial -eq ""){
+        $request = Invoke-MrkRestMethod -Method GET -ResourceID ('/networks/' + $networkID + '/devices')
+    } else {
+        $request = Invoke-MrkRestMethod -Method GET -ResourceID ('/networks/' + $networkID + '/devices/' + $serial)
+    }
     return $request
 }

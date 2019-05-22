@@ -16,22 +16,48 @@ function Add-MrkNetworkVLAN { # UNTESTED
     The subnet of the VLAN 
     .PARAMETER applianceIP
     The local IP of the appliance on the VLAN 
+    .PARAMETER dnsNameservers
+    The local IP of the appliance on the VLAN 
+    .PARAMETER reservedIpRanges
+    The local IP of the appliance on the VLAN 
+    .PARAMETER dhcpHandling
+    The local IP of the appliance on the VLAN 
     #>
     [CmdletBinding()]
     Param (
-        [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$Networkid,
-        [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$Id,
-        [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$Name,
-        [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$Subnet,
-        [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$applianceIP
+        [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$networkId,
+        [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$id,
+        [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$name,
+        [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$subnet,
+        [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$applianceIp,
+        [Parameter()][string]$dnsNameservers,
+        [Parameter()][array]$reservedIpRanges=@(),
+        [Parameter()][ValidateSet("Do not respond to DHCP requests", "Run a DHCP server")]
+        [string]$dhcpHandling
     )
+
+    #$config = Get-MrkNetworkVLAN -networkID $Networkid -id 
+
     $body  = @{
         "id" = $Id
         "networkId" = $Networkid
         "name" = $Name
         "applianceIp" = $applianceIP
         "subnet" = $Subnet
+        "dnsNameservers" = $dnsNameservers
+        "reservedIpRanges" = $reservedIpRanges
+        "dhcpHandling" = $dhcpHandling
     }
-    $request = Invoke-MrkRestMethod -Method POST -ResourceID ('/networks/' + $Networkid + '/vlans') -Body $body  
-    return $request
+
+    $request = Invoke-MrkRestMethod -Method POST -ResourceID ('/networks/' + $Networkid + '/vlans') -Body $body
+
+    #during POST (create new) VLAN the API doesn't handle the setting for DHCP mode other than 'Run a DHCP server'. By default the DHCP mode is enabled. In case the DHCP must be off,
+    # the Update-MrkNetworkVLAN function is called to update the Network VLAN DHCP setting using the same variables for the POST action.
+    #additionally the REST API ignores the $dnsNameservers value and always sets "upstream_dns" which is also corrected during the update call 
+    If ($dhcpHandling -eq "Do not respond to DHCP requests" -or $dnsNameservers -ne "upstream_dns"){
+        $request = Update-MrkNetworkVLAN -networkId $networkId -id $id -name $name -subnet $subnet -applianceIp $applianceIp -dhcpHandling $dhcpHandling -dnsNameservers $dnsNameservers -reservedIpRanges $reservedIpRanges
+        return $request
+    } else {
+        return $request
+    }
 }

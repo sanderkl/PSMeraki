@@ -13,12 +13,12 @@ function New-MrkDevice {
     #>
     [CmdletBinding()]
     Param (
-        [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$NetworkId,
-        [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$SerialNr
+        [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$networkId,
+        [Parameter(Mandatory)][ValidateNotNullOrEmpty()][Alias("serialNr")][String]$serial
     )
     $body = @{
-        "serial"=$SerialNr
+        "serial" = $serial
     }
-    $request = Invoke-MrkRestMethod -Method POST -ResourceID ('/networks/' + $NetworkId + '/devices/claim') -Body $body  
+    $request = Invoke-MrkRestMethod -Method POST -ResourceID ('/networks/' + $networkId + '/devices/claim') -Body $body
     return $request
 }

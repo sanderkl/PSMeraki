@@ -41,7 +41,7 @@
     if ($poeenabled -eq "True") { $poeenabledx=$true} else { $poeenabledx=$false}
 
 
-    $switch = Get-MrkSwitch $network.id| where {$_.name -eq $switchname}
+    $switch = Get-MrkSwitch $network.id | Where-Object {$_.name -eq $switchname}
 
     if ($switch){
 
@@ -79,7 +79,7 @@
         #$api.url = "/devices/" + $switch.serial + "/switchPorts/"+ $port
         #$uri = $api.endpoint + $api.url
         #$request = (Invoke-RestMethod -Method PUT -Uri $uri -Headers $header -Body $body)
-        $request = (Invoke-mrkRestMethod -Method PUT -ResourceID ('/devices/' + $switch.serial + '/switchPorts/'+$port) -Body $body)
+        $request = (Invoke-mrkRestMethod -Method PUT -ResourceID ('/devices/' + $switch.serial + '/switchPorts/' + $port) -Body $body)
         return $request
     
     }
