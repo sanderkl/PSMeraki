@@ -6,13 +6,13 @@ function Get-MrkDeviceClient {
     Gets a list of all Clients connected to a Meraki device, connected in the last month.
     .EXAMPLE
     Get-MrkDeviceClient -Serial Q2XX-XXXX-XXXX
-    .PARAMETER Serial
+    .PARAMETER serial
     specify a DeviceSerial, find a serial number using Get-MrkNetworkDevices
     #>
     [CmdletBinding()]
     Param (
-        [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$Serial
+        [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$serial
     )
-    $request = Invoke-MrkRestMethod -Method GET -ResourceID ('/devices/' + $Serial + '/clients?timespan=84000')
+    $request = Invoke-MrkRestMethod -Method GET -ResourceID ('/devices/' + $serial + '/clients?timespan=84000')
     return $request
 }

@@ -5,14 +5,14 @@ function Get-MrkNetworkDevice {
     .DESCRIPTION
     Gets a list of all Meraki Network Devices on a Meraki network. 
     .EXAMPLE
-    Get-MrkNetworkDevice -networkID X_112233445566778899
-    .PARAMETER networkID
-    specify a networkID, find an id using get-MrkNetworks
+    Get-MrkNetworkDevice -networkId X_112233445566778899
+    .PARAMETER networkId
+    specify a networkId, find an id using get-MrkNetworks
     #>
     [CmdletBinding()]
     Param (
-        [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$networkID
+        [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$networkId
     )
-    $request = Invoke-MrkRestMethod -Method GET -ResourceID ('/networks/' + $networkID + '/devices')
+    $request = Invoke-MrkRestMethod -Method GET -ResourceID ('/networks/' + $networkId + '/devices')
     return $request
 }

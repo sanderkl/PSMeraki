@@ -17,14 +17,14 @@ function New-MrkNetwork {
     optional tags for the network
     .PARAMETER timeZone
     define timezone where network is located, names can be found 'TZ*' column on https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
-    .PARAMETER orgID
+    .PARAMETER orgId
     optional parameter is a decimal number representing your organization. if this parameter is not specified it will use Get-MrkFirstOrgID to retreive the organization number
     #>
     [CmdletBinding()]
     Param (
-        [Parameter()][String]$OrgId = (Get-MrkFirstOrgID),
-        [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$Name,
-        [Parameter(Mandatory)][ValidateSet('wireless','switch','appliance','phone')][String]$Type,
+        [Parameter()][String]$orgId = (Get-MrkFirstOrgID),
+        [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$name,
+        [Parameter(Mandatory)][ValidateSet('wireless','switch','appliance','phone')][String]$type,
         [Parameter(Mandatory)][String]$TimeZone,
         [Parameter()][String]$Tags
     )

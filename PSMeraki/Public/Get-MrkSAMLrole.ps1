@@ -7,14 +7,14 @@ function Get-MrkSAMLrole {
     .EXAMPLE
     Get-MrkSAMLrole
     .EXAMPLE
-    Get-MrkSAMLrole -OrgId 111222
-    .PARAMETER OrgId
+    Get-MrkSAMLrole -orgId 111222
+    .PARAMETER orgId
     optional parameter specify an OrgId, default it will take the first OrgId retrieved from Get-MrkOrganizations
     #>
     [CmdletBinding()]
     Param (
         [Parameter()][String]$OrgId = (Get-MrkFirstOrgID)
     )
-    $request = Invoke-MrkRestMethod -Method GET -ResourceID ('/organizations/' + $OrgId + '/samlRoles')
+    $request = Invoke-MrkRestMethod -Method GET -ResourceID ('/organizations/' + $orgId + '/samlRoles')
     return $request
 }

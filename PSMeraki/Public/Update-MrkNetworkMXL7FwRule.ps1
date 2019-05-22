@@ -7,24 +7,38 @@ function Update-MrkNetworkMXL7FwRule{
     For MX series the firewall rules are set per NetworkID.
         PUT {{baseUrl}}/networks/{networkId}/l7FirewallRules
     .EXAMPLE
-    Add-MrkNetworkMXL7FwRule -networkID X_112233445566778899 -policy Deny -type applicationCategory -value
-    .PARAMETER networkID
-    specify a networkID, find an id using get-MrkNetworks
+    Add-MrkNetworkMXL7FwRule -networkId X_112233445566778899 -policy Deny -type applicationCategory -value
+    .PARAMETER networkId
+    specify a networkId, find an id using get-MrkNetworks
+    .PARAMETER policy
+    This parameter is currently only available as 'deny' and determines if the rule is to deny (or allow?) a certain L7 destination
+    .PARAMETER type
+    This parameter is a fixed ValidateSet: "application", "applicationCategory","host","port","ipRange"
+    * application(Category): this type requires a value of type array that provides an id and name of the Meraki-defined list of applications
+    * host: this type requires a value of type string that names the host. E.g. www.somedomain.com
+    * port: this type requires a value of type string that contains the portnumber that should be blocked
+    * ipRange: this type requires a value of type string that contains the iprange (ip4v) that should be blocked
+    .PARAMETER value
+    the value is eitehr a string or an array depeinding on the rule-type
+    .PARAMETER action
+    the action is add or remove. 'add' will look in the list of existing rules and only add the provided rule if not present yet.
+    'remove' will look in the list of existing rules and only remove it when it is present.
+    .PARAMETER reset
+    
     #>
     [CmdletBinding()]
     Param (
-        [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$networkID,
+        [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$networkId,
         [ValidateSet("deny")][String]$policy="deny",
         [Parameter(Mandatory)][ValidateNotNullOrEmpty()][ValidateSet("application", "applicationCategory","host","port","ipRange")][String]$type,
         [Parameter(Mandatory)][ValidateNotNullOrEmpty()]$value,
         [Parameter(Mandatory)][ValidateNotNullOrEmpty()][ValidateSet("add", "remove")][String]$action,
         [Parameter()][switch]$reset
     )
-    Update-MrkNetworkMXL7FwRule -networkId $CWCLNW.id -action add -policy deny -type applicationCategory -value @{id="meraki:layer7/category/13";name="Video & music"} -reset
 
     $ruleset = @()
     if (-not $reset){
-        $ruleset = (Get-MrkNetworkMXL7FwRule -networkID $networkId).rules
+        $ruleset = (Get-MrkNetworkMXL7FwRule -networkId $networkId).rules
     }
     #the value in the rule-object is an object itself that cannot be compared as string
     if ($type -match "application"){
@@ -83,11 +97,11 @@ function Update-MrkNetworkMXL7FwRule{
 
     if($true -ne $rulePresent){
 
-        $request = Invoke-MrkRestMethod -Method PUT -ResourceID ('/networks/' + $networkID + '/l7FirewallRules') -body $ruleObject
+        $request = Invoke-MrkRestMethod -Method PUT -ResourceID ('/networks/' + $networkId + '/l7FirewallRules') -body $ruleObject
         return $request
 
         # construct the uri of the MR device in the current organization
-        # $uri = "$(Get-MrkOrgEndpoint)/networks/$networkID/l7FirewallRules"    
+        # $uri = "$(Get-MrkOrgEndpoint)/networks/$networkId/l7FirewallRules"    
         # try {
         #     $request = Invoke-RestMethod -Method Put `
         #     -ContentType 'application/json' `

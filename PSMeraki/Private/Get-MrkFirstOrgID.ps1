@@ -10,7 +10,7 @@ function Get-MrkFirstOrgID {
   #>
     $MrkOrg = Get-MrkOrganization
     if ($MrkOrg){
-        return $MrkOrg[0].id 
+        return $MrkOrg.id[0]
     } Else {
         Write-Output "no meraki organizations found is api correct? use Set-MrkRestApiKey `<key`>"
     }

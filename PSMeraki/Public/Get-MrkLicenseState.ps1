@@ -11,8 +11,8 @@ function Get-MrkLicenseState {
     #>
     [CmdletBinding()]
     Param (
-        [Parameter()][String]$OrgId = (Get-MrkFirstOrgID)
+        [Parameter()][String]$orgId = (Get-MrkFirstOrgID)
     )
-    $request = Invoke-MrkRestMethod -Method GET -ResourceID ('/organizations/' + $OrgId + '/licenseState')
+    $request = Invoke-MrkRestMethod -Method GET -ResourceID ('/organizations/' + $orgId + '/licenseState')
     return $request
 }

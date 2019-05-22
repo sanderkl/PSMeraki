@@ -13,8 +13,8 @@ function Get-MrkDevicesStatus {
     #>
     [CmdletBinding()]
     Param (
-        [Parameter()][String]$OrgId = (Get-MrkFirstOrgID)
+        [Parameter()][String]$orgId = (Get-MrkFirstOrgID)
     )
-    $request = Invoke-MrkRestMethod -Method GET -ResourceID ('/organizations/' + $OrgId + '/deviceStatuses')
+    $request = Invoke-MrkRestMethod -Method GET -ResourceID ('/organizations/' + $orgId + '/deviceStatuses')
     return $request
 }

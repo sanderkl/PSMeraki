@@ -5,10 +5,10 @@ function Update-MrkDevice {
     .DESCRIPTION
     Updates properties for an already added Meraki device
     .EXAMPLE
-    Update-MrkDevice -Networkid X_111122223639801111 -SerialNr Q2XX-XXXX-XXXX -NewName TestName -NewTags TestTag -NewAddress "Kalverstraat, Amsterdam" 
-    .PARAMETER Networkid 
+    Update-MrkDevice -networkId X_111122223639801111 -serial Q2XX-XXXX-XXXX -NewName TestName -NewTags TestTag -NewAddress "Kalverstraat, Amsterdam" 
+    .PARAMETER networkId 
     id of a network (get-MrkNetworks)[0].id
-    .PARAMETER SerialNr 
+    .PARAMETER serial 
     Serial number of the physical device that is added to the network. 
     .PARAMETER NewName 
     Updates the new name for the meraki device
@@ -19,8 +19,8 @@ function Update-MrkDevice {
     #>
     [CmdletBinding()]
     Param (
-        [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$Networkid,
-        [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$SerialNr,
+        [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$networkId,
+        [Parameter(Mandatory)][ValidateNotNullOrEmpty()][Alias("serialNr")][String]$serial,
         [Parameter()][String]$NewName,
         [Parameter()][String]$NewTags,
         [Parameter()][String]$NewAddress
@@ -30,6 +30,6 @@ function Update-MrkDevice {
         "tags"=$NewTags
         "address"=$NewAddress
     }
-    $request = Invoke-MrkRestMethod -Method PUT -ResourceID ('/networks/' + $Networkid + '/devices/' + $SerialNr) -Body $body  
+    $request = Invoke-MrkRestMethod -Method PUT -ResourceID ('/networks/' + $networkId + '/devices/' + $serial) -Body $body  
     return $request
 }

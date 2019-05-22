@@ -8,13 +8,13 @@ function Get-MrkTemplate {
     Get-MrkTemplate 
     .EXAMPLE
     Get-MrkTemplate -OrgId 111222
-    .PARAMETER OrgId
+    .PARAMETER orgId
     optional specify a org Id, default it will take the first OrgId retrieved from Get-MrkOrganizations
     #>
     [CmdletBinding()]
     Param (
-        [Parameter()][String]$OrgId = (Get-MrkFirstOrgID)
+        [Parameter()][String]$orgId = (Get-MrkFirstOrgID)
     )
-    $request = Invoke-MrkRestMethod -Method GET -ResourceID ('/organizations/' + $OrgId + '/configTemplates')
+    $request = Invoke-MrkRestMethod -Method GET -ResourceID ('/organizations/' + $orgId + '/configTemplates')
     return $request
 }

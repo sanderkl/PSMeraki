@@ -18,9 +18,9 @@ function Get-MrkSwitch {
     .EXAMPLE
     Get-MrkSwitch
     .EXAMPLE
-    Get-MrkSwitch -networkID X_112233445566778899
-    .PARAMETER networkID
-    specify a networkID, find an id using get-MrkNetworks
+    Get-MrkSwitch -networkId X_112233445566778899
+    .PARAMETER networkId
+    specify a networkId, find an id using get-MrkNetworks
     #>
     [CmdletBinding(DefaultParameterSetName='network')]
     Param (
@@ -29,9 +29,6 @@ function Get-MrkSwitch {
     )
     switch ($PsCmdlet.ParameterSetName) {
         "network" {
-            #$inventory = Get-MrkInventory -organizationId (Get-MrkOrganization)
-            #$request = $inventory | Where-Object {$_.networkId -eq $networkId -and $_.model -match "MS"}
-            #$request = Invoke-MrkRestMethod -Method GET -ResourceID ('/networks/' + $networkId + '/devices')
             Write-Host processing network parameterset -ForegroundColor Green
             $request = Invoke-MrkRestMethod -Method GET -ResourceID ('/networks/' + $networkId + '/switch/settings')
         }

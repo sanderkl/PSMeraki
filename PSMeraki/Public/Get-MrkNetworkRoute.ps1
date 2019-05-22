@@ -5,14 +5,14 @@ function Get-MrkNetworkRoute {
     .DESCRIPTION
     Gets a list of all Meraki Network Routes on a Meraki network. 
     .EXAMPLE
-    Get-MrkNetworkRoute -networkID X_112233445566778899
-    .PARAMETER networkID
-    specify a networkID, find an id using get-MrkNetworks
+    Get-MrkNetworkRoute -networkId X_112233445566778899
+    .PARAMETER networkId
+    specify a networkId, find an id using get-MrkNetworks
     #>
     [CmdletBinding()]
     Param (
-        [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$networkID
+        [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$networkId
     )
-    $request = Invoke-MrkRestMethod -Method GET -ResourceID ('/networks/' + $networkID + '/staticRoutes')
+    $request = Invoke-MrkRestMethod -Method GET -ResourceID ('/networks/' + $networkId + '/staticRoutes')
     return $request
 }
