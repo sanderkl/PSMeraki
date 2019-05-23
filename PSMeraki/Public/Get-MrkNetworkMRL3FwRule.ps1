@@ -1,0 +1,25 @@
+function Get-MrkNetworkMRL3FwRule {
+    <#
+    .SYNOPSIS
+    Retrieves all Meraki MR-series L3 Firewall for a given Meraki network/ssid.
+    .DESCRIPTION
+    Gets a list of all Meraki L3 Firewall for a given Meraki network/ssid depending on the device-series. 
+    For MR series the firewall rules are retrieved per SSID-id per NetworkID. The SSID number is an integer 0 to 14.
+    Each SSID number has a unique SSID-name and settings like enabled, psk, etc etc
+        {{baseUrl}}/networks/{{networkId}}/ssids/{{ssidNum}}]/l3FirewallRules
+    .EXAMPLE
+    Get-MrkNetworkMRL3FirewallRules -networkId X_112233445566778899
+    .PARAMETER networkId
+    specify a networkId, find an id using get-MrkNetworks
+    .PARAMETER ssidId
+    specify the SSID number (0-14). Find the SSIDs with Get-MrkNetworkSSID
+    #>
+    [CmdletBinding()]
+    Param (
+        [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$networkId,
+        [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$ssidId
+    )
+
+    $request = Invoke-MrkRestMethod -Method GET -ResourceID ('/networks/' + $networkId + '/ssids/' + $ssidId + '/l3FirewallRules')
+    return $request
+}

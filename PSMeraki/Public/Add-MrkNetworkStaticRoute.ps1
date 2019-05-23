@@ -1,14 +1,12 @@
 Function Add-MrkNetworkStaticRoute{
     <#
-    #>
-    <#
     .SYNOPSIS
     Adds a Static Route to a Meraki network
     .DESCRIPTION
     Adds a Static Route to a Meraki network, identifying the network with the Network ID, to find an id use get-MrkNetwork
     .EXAMPLE
-    Add-MrkNetworkStaticRoute -Networkid X_111122223639801111 -name "vesselid-Client" -subnet 192.168.160.0/24 -gatewayIp 192.168.0.253 -enabled $true
-    .PARAMETER Networkid 
+    Add-MrkNetworkStaticRoute -networkId X_111122223639801111 -name "vesselid-Client" -subnet 192.168.160.0/24 -gatewayIp 192.168.0.253 -enabled $true
+    .PARAMETER networkId 
     id of a network (get-MrkNetworks)[0].id
     .PARAMETER Name
     The Name of the new static route

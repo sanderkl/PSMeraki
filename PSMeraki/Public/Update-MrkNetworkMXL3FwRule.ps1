@@ -7,9 +7,9 @@ function Update-MrkNetworkMXL3FwRule {
         Retrieves all Meraki L3 Firewall for a given Meraki network/ssid.
         Adds the newly provided rule to the top of the list.
     .EXAMPLE
-        Update-MrkNetworkMRL3FirewallRules -networkID X_112233445566778899
-    .PARAMETER networkID
-        specify a networkID, find an id using get-MrkNetworks
+        Update-MrkNetworkMRL3FirewallRules -networkId X_112233445566778899
+    .PARAMETER networkId
+        specify a networkId, find an id using get-MrkNetworks
     .PARAMETER comment
         specify the rule comment to describe the rule purpose
     .PARAMETER policy
@@ -46,7 +46,7 @@ function Update-MrkNetworkMXL3FwRule {
 
         [Parameter(Mandatory)]
         [ValidateNotNullOrEmpty()]
-        [ValidateSet("any", "tcp","udp","icmp")]
+        [ValidateSet("any","tcp","udp","icmp")]
         [String]$protocol,
 
         [Parameter(Mandatory)]
@@ -77,7 +77,7 @@ function Update-MrkNetworkMXL3FwRule {
     #$ruleSource = Import-Csv -Path "C:\Users\YS0\OneDrive - Van Oord\Scripts\Meraki\demorules.txt" -Delimiter "`t";
     $ruleset = @()
     if (-not $reset){
-        $ruleSource = Get-MrkNetworkMXL3FwRule -networkID $networkId
+        $ruleSource = Get-MrkNetworkMXL3FwRule -networkId $networkId
         #the non-default rules are in the array above the default
         $ruleset = $ruleSource[0..$(($ruleSource.Count) -2)]
     }
@@ -144,11 +144,11 @@ function Update-MrkNetworkMXL3FwRule {
 
     if($true -ne $rulePresent){
 
-        $request = Invoke-MrkRestMethod -Method PUT -ResourceID ('/networks/' + $networkID + '/l3FirewallRules') -body $ruleObject
+        $request = Invoke-MrkRestMethod -Method PUT -ResourceID ('/networks/' + $networkId + '/l3FirewallRules') -body $ruleObject
         return $request
 
         # #construct the uri of the MR device in the current organization
-        # $uri = "$(Get-MrkOrgEndpoint)/networks/$networkID/l3FirewallRules"
+        # $uri = "$(Get-MrkOrgEndpoint)/networks/$networkId/l3FirewallRules"
         # try {
         #     $request = Invoke-RestMethod -Method Put `
         #     -ContentType 'application/json' `

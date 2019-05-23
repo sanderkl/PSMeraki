@@ -5,7 +5,7 @@ function New-MrkOrgAdmin {
     .DESCRIPTION
     .EXAMPLE
     New-MrkOrgAdmin -Name 'Piet Test' -email 'piets@Test.com' -orgAccess 'read-only'
-    .PARAMETER OrgId 
+    .PARAMETER orgId 
     defaults to Get-MrkFirstOrgID, for admins who maintain multiple organizations, OrgID can be specified
     .PARAMETER Name
     Name of the dashboard admin 
@@ -18,7 +18,7 @@ function New-MrkOrgAdmin {
     #>
     [CmdletBinding()]
     Param (
-        [Parameter()][String]$OrgId = (Get-MrkFirstOrgID),
+        [Parameter()][String]$orgId = (Get-MrkFirstOrgID),
         [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$Name,
         [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$email,
         [Parameter(Mandatory)][ValidateSet('full','read-only','none')][String]$orgAccess,
@@ -30,6 +30,6 @@ function New-MrkOrgAdmin {
         "orgAccess" = $orgAccess
         "Tags" = $tags
     }
-    $request = Invoke-MrkRestMethod -Method POST -ResourceID ('/organizations/' + $OrgId + '/admins/') -Body $body  
+    $request = Invoke-MrkRestMethod -Method POST -ResourceID ('/organizations/' + $orgId + '/admins/') -Body $body  
     return $request
 }

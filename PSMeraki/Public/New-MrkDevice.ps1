@@ -6,10 +6,11 @@ function New-MrkDevice {
     blah 
     .EXAMPLE
     New-MrkDevice -Networkid X_111122223639801111 -Serial Q2XX-XXXX-XXXX
-    .PARAMETER NetworkId 
+    .PARAMETER networkId 
     id of a network get one using: (Get-MrkNetwork).id
-    .PARAMETER SerialNr 
-    Serial number of the physical device that is added to the network. 
+    .PARAMETER serial
+    Serial number of the physical device that is added to the network.
+    alias set as 'SerialNr' base on original restapi module
     #>
     [CmdletBinding()]
     Param (

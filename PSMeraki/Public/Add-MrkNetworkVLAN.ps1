@@ -3,10 +3,10 @@ function Add-MrkNetworkVLAN { # UNTESTED
     .SYNOPSIS
     Adds a VLAN to a Meraki network
     .DESCRIPTION
-    Adds a VLAN to a Meraki network, identifying the network with the Network ID, to find an id use get-MrkNetwork
+    Adds a VLAN to a Meraki network, identifying the network with the networkId, to find an id use get-MrkNetwork
     .EXAMPLE
-    Add-MrkNetworkVLAN -Networkid X_111122223639801111 -id 500 -Name DATA -subnet 10.11.12.0 -applianceIP 10.11.12.254
-    .PARAMETER Networkid 
+    Add-MrkNetworkVLAN -networkId X_111122223639801111 -id 500 -Name DATA -subnet 10.11.12.0 -applianceIP 10.11.12.254
+    .PARAMETER networkId 
     id of a network (get-MrkNetworks)[0].id
     .PARAMETER id
     VLAN is, a number between 1 and 4094
@@ -36,11 +36,11 @@ function Add-MrkNetworkVLAN { # UNTESTED
         [string]$dhcpHandling
     )
 
-    #$config = Get-MrkNetworkVLAN -networkID $Networkid -id 
+    #$config = Get-MrkNetworkVLAN -networkId $networkId -id 
 
     $body  = @{
         "id" = $Id
-        "networkId" = $Networkid
+        "networkId" = $networkId
         "name" = $Name
         "applianceIp" = $applianceIP
         "subnet" = $Subnet
@@ -49,7 +49,7 @@ function Add-MrkNetworkVLAN { # UNTESTED
         "dhcpHandling" = $dhcpHandling
     }
 
-    $request = Invoke-MrkRestMethod -Method POST -ResourceID ('/networks/' + $Networkid + '/vlans') -Body $body
+    $request = Invoke-MrkRestMethod -Method POST -ResourceID ('/networks/' + $networkId + '/vlans') -Body $body
 
     #during POST (create new) VLAN the API doesn't handle the setting for DHCP mode other than 'Run a DHCP server'. By default the DHCP mode is enabled. In case the DHCP must be off,
     # the Update-MrkNetworkVLAN function is called to update the Network VLAN DHCP setting using the same variables for the POST action.

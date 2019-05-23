@@ -10,8 +10,8 @@ function Set-MrkNetworkS2sVpn{
     Set-MrkNetworkS2sVpn -networkId N_123412341241234 -vpnHubs L_123456789012345678 -mode spoke -useDefaultRoute $false -vpnSubnets "10.20.30.0/24,no","10.20.40.0/24,yes","10.20.50.0/24,yes"
     the above command will enable the site-to-site VPN for network with id N_123412341241234, set the mode to spoke with hub-site-id L_123456789012345678.
     After enabline the spoke mode the script includes the network CIDRs "10.20.40.0/24,yes","10.20.50.0/24,yes" in the VPN-tunnel, but only if that network-id is known as a local subnet.
-    .PARAMETER networkID
-    specify a networkID, find an id using get-MrkNetworks
+    .PARAMETER networkId
+    specify a networkId, find an id using get-MrkNetworks
     .PARAMETER vpnHubs
     The Meraki id value(s) of the remote hub-site(s) e.g L_123456789012345678.
     This parameter should be provided as a(n array of) string-value(s).
@@ -69,9 +69,9 @@ function Set-MrkNetworkS2sVpn{
             if ($mode -eq 'spoke'){
                 $body | Add-Member -MemberType NoteProperty -Name "hubs" -value @($hubs)
             }
-            $request = Invoke-MrkRestMethod -Method PUT -ResourceID ('/networks/' + $networkID + '/siteToSiteVpn') -body $body
+            $request = Invoke-MrkRestMethod -Method PUT -ResourceID ('/networks/' + $networkId + '/siteToSiteVpn') -body $body
 
-            $localNetworks = (Get-MrkNetworkS2sVpn -networkID $networkID).subnets.localsubnet
+            $localNetworks = (Get-MrkNetworkS2sVpn -networkId $networkId).subnets.localsubnet
 
             foreach($net in $vpnSubnets){
                 #build the $subnets array. $net is constructed like $subnet,$inVpn. e.g: "10.16.48.0/24,yes" or "192.168.128.0/24,no"
@@ -102,7 +102,7 @@ function Set-MrkNetworkS2sVpn{
         }
     }
 
-    $request = Invoke-MrkRestMethod -Method PUT -ResourceID ('/networks/' + $networkID + '/siteToSiteVpn') -body $body
+    $request = Invoke-MrkRestMethod -Method PUT -ResourceID ('/networks/' + $networkId + '/siteToSiteVpn') -body $body
 
     return $request
 
