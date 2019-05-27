@@ -21,6 +21,8 @@ function Get-MrkSwitch {
     Get-MrkSwitch -networkId X_112233445566778899
     .PARAMETER networkId
     specify a networkId, find an id using get-MrkNetworks
+    .PARAMETER serial
+    specify the device serialnumber
     #>
     [CmdletBinding(DefaultParameterSetName='network')]
     Param (

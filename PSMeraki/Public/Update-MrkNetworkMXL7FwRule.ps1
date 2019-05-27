@@ -7,7 +7,8 @@ function Update-MrkNetworkMXL7FwRule{
     For MX series the firewall rules are set per NetworkID.
         PUT {{baseUrl}}/networks/{networkId}/l7FirewallRules
     .EXAMPLE
-    Add-MrkNetworkMXL7FwRule -networkId X_112233445566778899 -policy Deny -type applicationCategory -value
+    Update-MrkNetworkMXL7FwRule -networkId X_112233445566778899 -policy Deny -type applicationCategory -value 
+    Update-MrkNetworkMXL7FwRule -networkId X_112233445566778899 -policy Deny -type host -value malicious.domain.com 
     .PARAMETER networkId
     specify a networkId, find an id using get-MrkNetworks
     .PARAMETER policy
@@ -24,7 +25,8 @@ function Update-MrkNetworkMXL7FwRule{
     the action is add or remove. 'add' will look in the list of existing rules and only add the provided rule if not present yet.
     'remove' will look in the list of existing rules and only remove it when it is present.
     .PARAMETER reset
-    
+    optional switch to determine if the cmdlet will keep the existing L3 Firewall rules or start with a clean set of rules and add only this new one.
+    not specifying it or assigning $false will keep the existing rules (default).
     #>
     [CmdletBinding()]
     Param (

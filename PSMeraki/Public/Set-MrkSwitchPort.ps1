@@ -6,10 +6,24 @@
     blah 
     .EXAMPLE
     set-MrkSwitchPort -switchname ($locationcode+"-MS120-SW1") -Port $i -enabled True -Portname DATA/VOICE -vlan 500 -voicevlan 600 -type access -POEenabled True 
-    .PARAMETER NetworkId 
-    id of a network get one using: (Get-MrkNetwork).id
-    .PARAMETER SerialNr 
-    Serial number of the physical device that is added to the network. 
+    .PARAMETER switchname 
+    the name of the switch
+    .PARAMETER port 
+    the switch-portnumber to work on
+    .PARAMETER portName
+    the name to set on the port
+    .PARAMETER tags
+    the tag(s) to identify the switch
+    .PARAMETER enabled
+    parameter to control if the port is enabled or disabled
+    .PARAMETER POEenabled
+    parameter to control the Power Over Ethernet state
+    .PARAMETER type
+    parameter to specify the port-type: access or trunk
+    .PARAMETER vlan
+    parameter to define the VLAN id(s) the port operates in. Accessport can be in 1 VLAN only
+    .PARAMETER voiceVlan
+    parameter to define the VLAN id for voice
     #>
 
      [CmdletBinding()]
@@ -17,14 +31,14 @@
     param (
     
         [Parameter(Mandatory = $true)][String][ValidateNotNullOrEmpty()]$switchname,
-        [Parameter(Mandatory = $true)][String][ValidateNotNullOrEmpty()]$Port,
-        [Parameter()][String][ValidateNotNullOrEmpty()]$Portname="",
-        [Parameter()][String][ValidateNotNullOrEmpty()]$Tags="",
+        [Parameter(Mandatory = $true)][String][ValidateNotNullOrEmpty()]$port,
+        [Parameter()][String][ValidateNotNullOrEmpty()]$portName="",
+        [Parameter()][String][ValidateNotNullOrEmpty()]$tags="",
         [Parameter()][String][ValidateSet('True', 'False')]$enabled="False",
         [Parameter()][String][ValidateSet('True', 'False')]$POEenabled="False",
         [Parameter()][String][ValidateSet('trunk','access')]$type="",
         [Parameter()][String][ValidateNotNullOrEmpty()]$vlan="",
-        [Parameter()][String][ValidateNotNullOrEmpty()]$Voicevlan=""
+        [Parameter()][String][ValidateNotNullOrEmpty()]$voiceVlan=""
         #[Parameter(Mandatory = $false)][Bool][ValidateNotNullOrEmpty()]$isolation,
         #[Parameter(Mandatory = $false)][Bool][ValidateNotNullOrEmpty()]$rstp,
         #[Parameter(Mandatory = $false)][String][ValidateNotNullOrEmpty()]$stp,

@@ -14,6 +14,8 @@ Function Add-MrkNetworkStaticRoute{
     The subnet of the static route 
     .PARAMETER gatewayIp
     The remote next-hop IP for the static route
+    .PARAMETER enabled
+    hardcoded value that enables this VLAN
     #>
     [CmdletBinding()]
     Param (

@@ -1,4 +1,4 @@
-﻿function Update-MrkNetworkMRL3FirewallRules {
+﻿function Update-MrkNetworkMRL3FwRule {
     <#
     .SYNOPSIS
         Retrieves all Meraki L3 Firewall for a given Meraki network/ssid.
@@ -7,10 +7,10 @@
         Retrieves all Meraki L3 Firewall for a given Meraki network/ssid.
         Adds the newly provided rule to the top of the list.
     .EXAMPLE
-        Update-MrkNetworkMRL3FirewallRules -networkID X_112233445566778899
-    .PARAMETER networkID
+        Update-MrkNetworkMRL3FwRule -networkId X_112233445566778899 -ssidId 0 -comment "Guest Network" -policy 'deny' -protocol 'any' -destPort 80 -destCidr '10.0.0.0/8' -action 'add'
+    .PARAMETER networkId
         specify a networkID, find an id using get-MrkNetworks
-    .PARAMETER ssidID
+    .PARAMETER ssidId
         specify the integer Id value of the SSID entry to modify
     .PARAMETER comment
         specify the rule comment to describe the rule purpose
@@ -29,11 +29,13 @@
         specify 'add' or 'remove'
         Add will add the rule as new topmost entry.
         Remove will find the rule specified by the unique combination of protocol,destport and destCidr or comment.
+    .PARAMETER allowLanAccess
+        parameter to set whether or not to allow LAN access (isolation). Default is $true
     #>
     [CmdletBinding()]
     Param (
-        [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$networkID,
-        [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$ssidID,
+        [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$networkId,
+        [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$ssidId,
         [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$comment,
         [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$policy,
         [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$protocol,

@@ -11,5 +11,6 @@ function Get-MrkOrgEndpoint {
     $redirectedURL = $webRequest.BaseResponse.ResponseUri.AbsoluteUri
     $redirectedURLBase = $redirectedURL.Replace('/organizations','')
     $global:orgBaseUri = $redirectedURLBase
+    Write-Verbose "Meraki RestApi organization URL: $orgBaseUri"
     Return $redirectedURLBase
 }

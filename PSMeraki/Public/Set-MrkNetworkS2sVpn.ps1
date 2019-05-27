@@ -23,14 +23,13 @@ function Set-MrkNetworkS2sVpn{
     .PARAMETER useDefaultRoute
     Possible values: $true or $false
     Only valid in spoke mode
-    .PARAMETER subnets
+    .PARAMETER vpnSubnets
     This parameter should be provided as a(n array of) string-value(s).
     Each value contains the subnet CIDR and the $true/$false value to set whether a subnet is included in the VPN-tunnel or not/
     Only if the local subnet cidr exists on the appliance the setting will be implemented.
-    e.g "10.1.0.0/24,$true","10.1.1.0/24,$false" will include 10.1.0.0/24 in VPN and exclude 10.1.1.0/24. Other vlans are unchanged.
-    If $enforce is $true then all local vlan subnets except those mentioned in the subnets are set as excluded from VPN.
+    e.g "10.1.0.0/24,yes","10.1.1.0/24,no" will include 10.1.0.0/24 in VPN and exclude 10.1.1.0/24. Other vlans are unchanged.
     .PARAMETER enforce
-    (not used yet)
+    (not used yet).
     #>
     param(
         [Parameter(Mandatory)][String]$networkId,
