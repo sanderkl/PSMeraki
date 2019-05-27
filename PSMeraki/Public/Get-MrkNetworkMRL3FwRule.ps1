@@ -8,9 +8,9 @@ function Get-MrkNetworkMRL3FwRule {
     Each SSID number has a unique SSID-name and settings like enabled, psk, etc etc
         {{baseUrl}}/networks/{{networkId}}/ssids/{{ssidNum}}]/l3FirewallRules
     .EXAMPLE
-    Get-MrkNetworkMRL3FirewallRules -networkId X_112233445566778899
+    Get-MrkNetworkMRL3FwRule -networkId X_112233445566778899
     .PARAMETER networkId
-    specify a networkId, find an id using get-MrkNetworks
+    specify a networkId. Find a networkId using get-MrkNetwork [-orgId]
     .PARAMETER ssidId
     specify the SSID number (0-14). Find the SSIDs with Get-MrkNetworkSSID
     #>

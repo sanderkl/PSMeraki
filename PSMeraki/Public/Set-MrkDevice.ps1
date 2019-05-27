@@ -9,7 +9,17 @@ function Set-MrkDevice {
     .PARAMETER networkId 
     id of a network get one using: (Get-MrkNetwork).id
     .PARAMETER serial 
-    Serial number of the physical device that is added to the network. 
+    Serial number of the physical device that is added to the network.
+    .PARAMETER devicename
+    Optional parameter to specify the name of the device
+    .PARAMETER address
+    Optional parameter to specify the address of the device
+    .PARAMETER tag
+    Optional parameter to specify the tag(s) to identify the device
+    .PARAMETER lat
+    Optional parameter to specify the latitude value of the device
+    .PARAMETER lng
+    Optional parameter to specify the longitude value of the device
     #>
     [CmdletBinding()]
     Param (

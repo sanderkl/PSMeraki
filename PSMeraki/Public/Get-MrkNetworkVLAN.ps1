@@ -14,7 +14,7 @@ function Get-MrkNetworkVLAN {
     [CmdletBinding()]
     Param (
         [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$networkId,
-        [parameter()]$id
+        [parameter()][string]$id
     )
 
     if ($null -eq $id -or "" -eq $id){

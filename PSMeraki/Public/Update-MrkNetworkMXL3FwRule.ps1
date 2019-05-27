@@ -7,7 +7,7 @@ function Update-MrkNetworkMXL3FwRule {
         Retrieves all Meraki L3 Firewall for a given Meraki network/ssid.
         Adds the newly provided rule to the top of the list.
     .EXAMPLE
-        Update-MrkNetworkMRL3FirewallRules -networkId X_112233445566778899
+        Update-MrkNetworkMXL3FwRule -networkId X_112233445566778899 -comment 'deny clientaccess' -policy 'deny' -protocol 'any' -srcPort 'any' -srcCidr '10.20.30.0/24' -destPort 'any' -destCidr '10.20.20.0/24' -action add
     .PARAMETER networkId
         specify a networkId, find an id using get-MrkNetworks
     .PARAMETER comment
@@ -16,6 +16,13 @@ function Update-MrkNetworkMXL3FwRule {
         specify 'deny' or 'allow'
     .PARAMETER protocol
         specify the protocol 'any', 'tcp' or 'udp'
+    .PARAMETER srcPort
+        specift 'any', a single port like '53', or a port-range like '21-23'.
+        comma-separated values are NOT supported althought the API documentation says otherwise.
+    .PARAMETER srcCidr
+        specify the destination network by IP address or CIDR notation
+        e.g: 10.0.5.0/24
+        e.g: 192.168.1.50, 192.168.1.50/32
     .PARAMETER destPort
         specift 'any', a single port like '53', or a port-range like '21-23'.
         comma-separated values are NOT supported althought the API documentation says otherwise.
@@ -27,7 +34,9 @@ function Update-MrkNetworkMXL3FwRule {
         specify 'add' or 'remove'
         Add will add the rule as new topmost entry.
         Remove will find the rule specified by the unique combination of protocol,destport and destCidr or comment.
-        
+    .PARAMETER reset
+        optional switch to determine if the cmdlet will keep the existing L3 Firewall rules or start with a clean set of rules and add only this new one.
+        not specifying it or assigning $false will keep the existing rules (default).
     #>
     [CmdletBinding()]
     Param (

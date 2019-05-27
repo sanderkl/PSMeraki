@@ -24,13 +24,13 @@ function New-MrkNetwork {
     Param (
         [Parameter()][String]$orgId = (Get-MrkFirstOrgID),
         [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$name,
-        [Parameter(Mandatory)][ValidateSet('wireless','switch','appliance','phone')][String]$type,
+        [Parameter(Mandatory)][ValidateSet('wireless','switch','appliance','phone')][String[]]$type,
         [Parameter(Mandatory)][String]$TimeZone,
         [Parameter()][String]$Tags
     )
     $body  = @{
         "name" = $name
-        "type" = $type
+        "type" = $type -join (" ")
         "tags" = $tags
         "timeZone" = $timeZone
     }

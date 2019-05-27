@@ -5,9 +5,9 @@ function Get-MrkNetworkS2sVpn {
     .DESCRIPTION
         Gets a list of all Meraki Network SiteToSiteVPNs on a Meraki network. 
     .EXAMPLE
-        Get-MrkNetworkSiteToSiteVPN -networkId X_112233445566778899.
+        Get-MrkNetworkS2sVpn -networkId X_112233445566778899.
     .PARAMETER networkId
-        specify a networkId, find an id using get-MrkNetworks.
+        specify a networkId. Find a networkId using get-MrkNetwork [-orgId]
     #>
     [CmdletBinding()]
     Param (

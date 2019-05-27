@@ -7,9 +7,9 @@ function Get-MrkNetworkMXL3FwRule {
     For MX series the firewall rules are retrieved per networkId.
         {{baseUrl}}/networks/{{networkId}}/l3FirewallRules
     .EXAMPLE
-    Get-MrkNetworkMXL3FirewallRule -networkId X_112233445566778899
+    Get-MrkNetworkMXL3FwRule -networkId X_112233445566778899
     .PARAMETER networkId
-    specify a networkId, find an id using get-MrkNetworks
+    specify a networkId, find an id using get-MrkNetwork [-orgId]
     #>
     [CmdletBinding()]
     Param (
