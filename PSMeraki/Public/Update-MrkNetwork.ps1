@@ -8,10 +8,7 @@ function Update-MrkNetwork {
     .EXAMPLE
     this will set the 
     Update-MrkNetwork -networkId N_1234567890123456 -EnableVlanState
-    .EXAMPLE
-
-    .EXAMPLE
-
+    Update-MrkNetwork -networkId N_1234567890123456 -name 'Office LA' -timeZone 'America/Los_Angeles' -tags "USA LA"
     .PARAMETER orgId
     (optional) parameter to specify the Meraki Organization id to invoke the REST call to
     .PARAMETER networkId

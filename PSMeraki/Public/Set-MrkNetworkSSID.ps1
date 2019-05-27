@@ -107,7 +107,8 @@ function Set-MrkNetworkSSID {
         [Parameter()][Validateset('Strict priority order','Round robin')][string]$radiusLoadBalancingPolicy,
         [Parameter()]$concentratorNetworkId,
         [Parameter()]$walledGardenEnabled,
-        [Parameter()]$walledGardenRanges
+        [Parameter()]$walledGardenRanges,
+        [Parameter()]$apTagsAndVlanIds
     )
     #validate parameter-dependencies for psk, radius type authentication
     if (($authMode -eq '8021x-radius' -or $authMode -eq 'open-with-radius') -and $null -eq $radiusServers){
