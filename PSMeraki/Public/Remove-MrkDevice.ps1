@@ -1,9 +1,9 @@
 function Remove-MrkDevice {
     <#
     .SYNOPSIS
-    Removes a new device, adds it to a network
+    Removes a device from a network.
     .DESCRIPTION
-    blah 
+    Removes a device from a network, but leaves it in the inventory 
     .EXAMPLE
     Remove-MrkDevice -Networkid X_111122223639801111 -Serial Q2XX-XXXX-XXXX
     .PARAMETER networkId 
