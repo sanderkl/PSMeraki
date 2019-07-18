@@ -9,8 +9,8 @@ function Remove-MrkDevice {
     .PARAMETER networkId 
     id of a network (get-MrkNetworks)[0].id
     .PARAMETER serial 
-    Serial number of the physical device that is added to the network. 
-    alias set as 'SerialNr' base on original restapi module
+    Serial number of the physical device that is removed from the network. 
+    alias set as 'SerialNr' based on original restapi module
     #>
     [CmdletBinding()]
     Param (
