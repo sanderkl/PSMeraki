@@ -22,9 +22,7 @@ function Invoke-MrkRestMethod {
         [Parameter(Mandatory)][ValidateSet('GET','POST','PUT','DELETE')][String]$Method,
         [Parameter()]$body
     )
-    if (!$orgBaseUri){
-        Get-MrkOrgEndpoint
-    }
+    $orgBaseUri = Get-MrkOrgEndpoint
     $uri = $orgBaseUri + $ResourceID
     [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
     try {
