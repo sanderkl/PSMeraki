@@ -20,7 +20,8 @@ function Update-MrkNetworkMXL7FwRule{
     * port: this type requires a value of type string that contains the portnumber that should be blocked
     * ipRange: this type requires a value of type string that contains the iprange (ip4v) that should be blocked
     .PARAMETER value
-    the value is eitehr a string or an array depeinding on the rule-type
+    the value is either a string or an array depending on the rule-type
+    the array-value must be given like this: @{id="meraki:layer7/category/13";name="Video & music"}
     .PARAMETER action
     the action is add or remove. 'add' will look in the list of existing rules and only add the provided rule if not present yet.
     'remove' will look in the list of existing rules and only remove it when it is present.
