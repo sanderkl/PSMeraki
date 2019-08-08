@@ -18,7 +18,7 @@ function Get-MrkNetwork {
     #>
     [CmdletBinding()]
     Param (
-        [Parameter()][String]$orgId = (Get-MrkFirstOrgID),
+        [Parameter()][String]$orgId = $(Get-MrkFirstOrgID),
         [Parameter()][String]$networkId
     )
     if($null -eq $networkId -or "" -eq $networkId){

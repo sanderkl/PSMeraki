@@ -83,7 +83,6 @@ function Update-MrkNetworkMXL3FwRule {
         [switch]$reset
     )
 
-    #$ruleSource = Import-Csv -Path "C:\Users\YS0\OneDrive - Van Oord\Scripts\Meraki\demorules.txt" -Delimiter "`t";
     $ruleset = @()
     if (-not $reset){
         $ruleSource = Get-MrkNetworkMXL3FwRule -networkId $networkId
@@ -156,22 +155,5 @@ function Update-MrkNetworkMXL3FwRule {
         $request = Invoke-MrkRestMethod -Method PUT -ResourceID ('/networks/' + $networkId + '/l3FirewallRules') -body $ruleObject
         return $request
 
-        # #construct the uri of the MR device in the current organization
-        # $uri = "$(Get-MrkOrgEndpoint)/networks/$networkId/l3FirewallRules"
-        # try {
-        #     $request = Invoke-RestMethod -Method Put `
-        #     -ContentType 'application/json' `
-        #     -Headers (Get-MrkRestApiHeader) `
-        #     -Uri $uri `
-        #     -Body ($ruleObject | ConvertTo-Json) -Verbose -ErrorAction Stop
-
-        #     Write-Host "succesfully updated firewall rules" -ForegroundColor Green
-        # }
-        # catch
-        # {
-        #     $_.exception
-        # }
-
-        Return ($request | ConvertTo-Json)
     }
 }

@@ -16,10 +16,18 @@ function Get-MrkNetworkMRL3FwRule {
     #>
     [CmdletBinding()]
     Param (
-        [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$networkId,
+        [Parameter(Mandatory=$true,
+            ValueFromPipeline=$true,
+            ValueFromPipelineByPropertyName=$true)]
+        [ValidateNotNullOrEmpty()]
+        [Alias("id")] 
+        [String]$networkId,
         [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$ssidId
     )
-
-    $request = Invoke-MrkRestMethod -Method GET -ResourceID ('/networks/' + $networkId + '/ssids/' + $ssidId + '/l3FirewallRules')
-    return $request
+    begin{}
+    process{
+        $request = Invoke-MrkRestMethod -Method GET -ResourceID ('/networks/' + $networkId + '/ssids/' + $ssidId + '/l3FirewallRules')
+        return $request
+    }
+    end{}
 }
