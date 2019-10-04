@@ -26,14 +26,20 @@ function Update-MrkNetwork {
     [CmdletBinding()]
     Param (
         [Parameter()][String]$orgId = (Get-MrkFirstOrgID),
-        [Parameter(Mandatory)][String]$networkId,
+        [Parameter(Mandatory)][string]$networkId,
         [Parameter(ParameterSetName="vlanstate")][bool]$enableVlanState,
         [Parameter(ParameterSetName="identity")][String]$name,
         [Parameter(ParameterSetName="identity")][String]$timeZone,
         [Parameter(ParameterSetName="identity")][String]$tags
     )
 
-    if($EnableVlanState){
+    $mrkNetworkSettings = Get-MrkNetwork -networkId $networkId
+
+    if (-not $PSBoundParameters.keys.Contains("name")){$name = $mrkNetworkSettings.name}
+    if (-not $PSBoundParameters.keys.Contains("timeZone")){$timeZone = $mrkNetworkSettings.timeZone}
+    if (-not $PSBoundParameters.keys.Contains("tags")){$tags = $mrkNetworkSettings.tags}
+
+    if($PSCmdlet.ParameterSetName -eq "vlanstate"){
         $body = @{
             enabled = $EnableVlanState
         }
@@ -43,6 +49,7 @@ function Update-MrkNetwork {
 
         return $request
     }
+
     if($PSCmdlet.ParameterSetName -eq "identity"){
         $body = @{
             name = $name

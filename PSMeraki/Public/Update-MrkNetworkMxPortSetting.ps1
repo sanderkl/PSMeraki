@@ -49,7 +49,6 @@ function Update-MrkNetworkMxPortSetting{
         enabled = $enabled
         dropUntaggedTraffic = $dropUntaggedTraffic
         type = $type
-        vlan = $vlan
     }
     #if the type is access, only then the accessPolicy value is valid. Default policy is assumed to be open so only adding the property accessPolicy to the request-body if it differs from open
     if ($type -eq 'access' -and $accessPolicy -ne 'open'){
@@ -58,6 +57,10 @@ function Update-MrkNetworkMxPortSetting{
     if ($type -eq 'trunk'){
         $body | Add-Member -MemberType NoteProperty -Name 'allowedVlans' -Value ($allowedVlans -join ",")
     }
+    if ($dropUntaggedTraffic -ne 'true'){
+        $body | Add-Member -MemberType NoteProperty -Name 'vlan' -Value $vlan
+    }
+
 
     $request = Invoke-MrkRestMethod -Method PUT -ResourceID ('/networks/' + $networkId + '/appliancePorts/' + $portId) -Body $body
     return $request

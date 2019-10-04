@@ -25,48 +25,89 @@ function Update-MrkNetworkVLAN {
     .PARAMETER reservedIpRanges
     "reservation1","reservation2",etc
     The reservedIpRanges input-parameter is Multivalue string (array) object where each entry should be of a fixed format:
-    "start-ip1,end-ip1,description1","start-ip2,end-ip2,description2",etc
+        -reservedIpRanges "start-ip1,end-ip1,description1","start-ip2,end-ip2,description2",etc.
+    For example: -reservedIpRanges "10.0.0.1,10.0.0.9,AccessPoints","10.0.0.10,10.0.0.19,Switches","10.0.0.20,10.0.0.29,Printers"
+    The provided value(s) will be converted into the correct format as accepted by the API.
     .PARAMETER dhcpHandling
-    parameter to set dhcp service on or off. By default the meraki MX servers as a dhcp server for each VLAN.
-    the setting can be "Do not respond to DHCP requests", "Run a DHCP server", or a 
-    .Notes
-    
+    Parameter to set dhcp service on or off. By default the meraki MX servers as a dhcp server for each VLAN.
+    The setting can be "Do not respond to DHCP requests" or "Run a DHCP server" or "Relay DHCP to another server"
+    .PARAMETER dhcpBootOptionsEnabled
+    Parameter ($true or $false) to enable or disable the support for advanced DHCP control
+    .PARAMETER dhcpBootNextServer
+    Parameter (string value) to specify the TFTP / PXE server to retrieve the bootfile from. Specify the IP or Hostname.
+    If a hostname is provided the DNS server must be able to resolve this name.
+    Only valid when the dhcpBootOptionsEnabled parameter is $true
+    .PARAMETER dhcpBootFilename
+    Parameter (string value) to provide the name of the bootfile the system will use for the TFTP/PXE boot.
+    .PARAMETER dhcpOptions
+    Parameter (multivalued string value) to specify various options. This parameter must be provided as follows: code; type; value
+        -dhcpoptions "2;integer;60","26;integer;1234","42;ip;192.168.128.2"
+    The provided value(s) will be converted into the correct format as accepted by the API.
+    .PARAMETER fixedIpAssignments
+    Parameter (multivalued string value) to specify the IP reservations for the DHCP server. Only valid if the dhcpHandling is "Run a DHCP server"
+    This parameter must be provided as follows: "mac_address1;reserved_ip1;name1"[,"mac_address2;reserved_ip2;name2",etc]
+    For example: -fixedIpAssignments "00:e0:db:21:0f:f9;10.13.90.31;hostname1","00:e0:db:48:7f:ba;10.13.90.32;hostname2"
+    .PARAMETER dhcpRelayServerIps
+    Parameter (multivalued string value) to specify the remote IP-address(es) to forward the DHCO request to.
+    These IPs must be reachable either locally or remote via the site to site VPN.
     #>
     [CmdletBinding()]
     Param (
-        [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$networkId,
-        [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$id,
-        [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$name,
-        [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$subnet,
-        [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$applianceIp,
-        [Parameter()][string[]]$dnsNameservers,
-        [Parameter()][string[]]$reservedIpRanges,
-        [Parameter()][ValidateSet("","Do not respond to DHCP requests", "Run a DHCP server")]
-        [string]$dhcpHandling
+        [Parameter(Mandatory)][ValidateNotNullOrEmpty()][string]$networkId,
+        [Parameter(Mandatory)][ValidateNotNullOrEmpty()][string]$id,
+        [Parameter(Mandatory)][ValidateNotNullOrEmpty()][string]$name,
+        [Parameter(Mandatory)][ValidateNotNullOrEmpty()][string]$subnet,
+        [Parameter(Mandatory)][ValidateNotNullOrEmpty()][string]$applianceIp,
+        [Parameter()][ValidateNotNullOrEmpty()][string[]]$dnsNameservers,
+        [Parameter()][ValidateNotNullOrEmpty()][string[]]$reservedIpRanges,
+        [Parameter()][ValidateSet("Do not respond to DHCP requests", "Run a DHCP server", "Relay DHCP to another server")]
+            [string]$dhcpHandling,
+        [Parameter()][bool]$dhcpBootOptionsEnabled,
+        [Parameter()][string]$dhcpBootNextServer,
+        [Parameter()][string]$dhcpBootFilename,
+        [Parameter()][string[]]$dhcpOptions,
+        [Parameter()][string[]]$fixedIpAssignments,
+        [Parameter()][string[]]$dhcpRelayServerIps
     )
-    #reservedIpRanges string property (IP Reservation(s), comma separated) must be converted into hashtable type to pass it on to the REST API
-    if($null -ne $reservedIpRanges){
-        $tmpCol = @()
-        forEach($res in $reservedIpRanges){
-            $tmpCol += New-Object -TypeName PSObject -Property @{
-                start = ($res.split(","))[0]
-                end = ($res.split(","))[1]
-                comment = ($res.split(","))[2]
+
+    $body = @{}
+
+    foreach ($key in $PSBoundParameters.keys){
+        switch($key){
+            "reservedIpRanges" {
+                if($null -ne $reservedIpRanges){
+                    $tmpCol = @()
+                    forEach($res in $reservedIpRanges){
+                        $tmpCol += New-Object -TypeName PSObject -Property @{
+                            start = ($res.split(","))[0]
+                            end = ($res.split(","))[1]
+                            comment = ($res.split(","))[2]
+                        }
+                    }
+                    [array]$reservedIpRanges = $tmpCol
+                }
+                $body.$key = $reservedIpRanges
             }
+            "dnsNameservers" {
+                $body.$key = $dnsNameservers -join "`n"
+            }
+            "fixedIpAssignments" {
+                #check if the format is correct: 3 ;-separated parameters in the multivalue string-array
+                $fiaColl = @{}
+                foreach ($fia in $PSBoundParameters.item($key)){
+                    $fiaMac = ($fia -split ";")[0]
+                    $fiaIP = ($fia -split ";")[1]
+                    $fiaName = ($fia -split ";")[2]
+                    $fiaColl.$fiaMac = @{ip = $fiaIP; name = $fiaName}
+                }
+                $body.$key = $fiaColl
+            }
+            Default {$body.$key = $PSBoundParameters.item($key)}
         }
-        [array]$reservedIpRanges = $tmpCol
     }
 
-    $body  = @{
-        "id" = $Id
-        "networkId" = $networkId
-        "name" = $name
-        "applianceIp" = $applianceIP
-        "subnet" = $subnet
-        "dnsNameservers" = $dnsNameservers -join "`n"
-        "reservedIpRanges" = $reservedIpRanges
-        "dhcpHandling" = $dhcpHandling
-    }
-    $request = Invoke-MrkRestMethod -Method Put -ResourceID ('/networks/' + $Networkid + '/vlans/' + $Id) -Body $body  
+    $body | ConvertTo-Json -Depth 10
+
+    $request = Invoke-MrkRestMethod -Method Put -ResourceID ('/networks/' + $networkId + '/vlans/' + $id) -Body $body
     return $request
 }

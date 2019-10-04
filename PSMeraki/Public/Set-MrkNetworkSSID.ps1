@@ -16,13 +16,13 @@ function Set-MrkNetworkSSID {
     .PARAMETER enabled
     boolean parameter to specify the state of the SSID [$true/$false]
     .PARAMETER authMode
-    ('open', 'psk', 'open-with-radius', '8021x-meraki', '8021x-radius')
+    The association control method for the SSID ('open', 'psk', 'open-with-radius', '8021x-meraki' or '8021x-radius')
     .PARAMETER encryptionMode
-    ('wpa', 'wep' or 'wpa-eap')
+    The psk encryption mode for the SSID ('wep' or 'wpa'). This param is only valid if the authMode is 'psk'
     .PARAMETER psk
     The passkey for the SSID. This param is only valid if the authMode is 'psk'
     .PARAMETER wpaEncryptionMode
-    ('WPA1 and WPA2', 'WPA2 only')
+    The types of WPA encryption. ('WPA1 and WPA2' or 'WPA2 only')
     .PARAMETER splashPage
     The type of splash page for the SSID ('None', 'Click-through splash page', 'Billing', 
     'Password-protected with Meraki RADIUS', 'Password-protected with custom RADIUS', 
@@ -89,7 +89,7 @@ function Set-MrkNetworkSSID {
         [String]$splashPage,
         [Parameter(Mandatory)][ValidateSet("open","psk","open-with-radius","8021x-meraki","8021x-radius")][String]$authMode,
         [Parameter()][String]$psk,
-        [Parameter(Mandatory)][ValidateSet('wpa','wep','wpa-eap')][String]$encryptionMode,
+        [Parameter()][ValidateSet('wpa','wep')][String]$encryptionMode,
         [Parameter(Mandatory)][ValidateSet('WPA1 and WPA2','WPA2 only')][String]$wpaEncryptionMode,
         [Parameter(Mandatory)][ValidateSet('NAT mode','Bridge mode','Layer 3 roaming','Layer 3 roaming with a concentrator','VPN')][String]$ipAssignmentMode,
         [Parameter()][ValidateSet('1','2','5.5','6','9','11','12','18','24','36','48','54')][int]$minBitrate,
@@ -117,6 +117,12 @@ function Set-MrkNetworkSSID {
     if ($authMode -eq 'psk' -and "" -eq $psk){
         $psk = read-host -Prompt "the psk key must be provided when authMode equals 'psk'";
         $PSBoundParameters += @{psk = $psk}
+    }
+    if ($authMode -eq 'psk' -and "" -eq $encryptionMode){
+        do{
+            $encryptionMode = read-host -Prompt "the encryptionMode ('wep' or 'wpa') key must be provided when authMode equals 'psk'";
+        } until ($encryptionMode -in 'wep','wpa')
+        $PSBoundParameters += @{encryptionMode = $encryptionMode}
     }
     if($useVlanTagging -and $ipAssignmentMode -notin 'Bridge mode', 'Layer 3 roaming'){
         Write-Host "useVlanTagging is set to TRUE but the ipAssignmentMode is either not set or not one of 'Bridge mode' or 'Layer 3 roaming'"
