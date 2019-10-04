@@ -129,20 +129,24 @@ function Update-MrkNetworkMXL3FwRule {
     }
     
     #populate the to-be ruleset first with the existing rules (will be none in case of reset)
-    $applyRules = @()
+    $applyRules = @();
+    $rulePresent = $false;
+    #in case the MXL3RuleSetState contains entries we compare each entry with the provided parameters and based on the action (add/remove) we remove the entry
+    # from the to-be applyRules collection, leave it in the to-be applyRules collection if it is already present, or add it to the to-be applyRules if it is really new.
     ForEach ($rule in $global:MXL3RuleSetState){
 
-        #if the action is delete and either the current rule comment matches the given comment, or the rule specifications protocol/destPort/destCidr are equal keep the entry in the ruleset. 
+        #if the action is remove and either the current rule comment matches the given comment, or the rule specifications protocol/destPort/destCidr are equal keep the entry in the ruleset. 
         if ($action -eq 'remove' -and `
           (($rule.protocol -eq $protocol -and `
             $rule.destPort -eq $destPort -and `
             $rule.destCidr -eq $destCidr) -or `
             ($rule.comment -eq $comment))){
                 "No longer adding this rule: $comment";
-                $rulePresent = $false;
+                $objectModified = $true;
                 continue
             }
 
+        #when adding a new rule the provided function parameters are compared to those of each present rule in the $global:MXL3RuleSetState. if an identical rule already exist we 
         if ($action -eq 'add' -and `
             (($rule.protocol -eq $protocol -and `
               $rule.srcPort -eq $srcPort -and `
@@ -150,7 +154,7 @@ function Update-MrkNetworkMXL3FwRule {
               $rule.destPort -eq $destPort -and `
               $rule.destCidr -eq $destCidr) -or `
               ($rule.comment -eq $comment))){
-                  "Not adding this rule as it is already present: $comment";
+                  write-verbose "Not adding this rule as it is already present: $comment";
                   $rulePresent = $true;
               }
 
@@ -182,6 +186,7 @@ function Update-MrkNetworkMXL3FwRule {
         }
 
         $applyRules += $ruleEntry
+        $objectModified = $true;
     };
 
     #the resulting $applyRules must be stored in the $global:MXL3RuleSetState
@@ -189,11 +194,14 @@ function Update-MrkNetworkMXL3FwRule {
 
     #construct the full ruleObject to push into the $body of the RESTapi request
     $ruleObject = New-Object -TypeName PSObject -Property @{
-        rules = $applyRules
+        rules = $global:MXL3RuleSetState
     }
 
+    Write-Verbose ($ruleObject | ConvertTo-Json -Depth 10)
+    if (-not $commit){Write-Verbose "to apply the ruleset use the -commit switch"}
+    
     #if the rules have changed and you want to commit, or you want to commit a (saved) configuration apply the change now.
-    if( ($true -ne $rulePresent -and $commit) -or $commit){
+    if( ($true -eq $objectModified -and $commit) -or $commit){
 
         $request = Invoke-MrkRestMethod -Method PUT -ResourceID ('/networks/' + $networkId + '/l3FirewallRules') -body $ruleObject
         return $request
