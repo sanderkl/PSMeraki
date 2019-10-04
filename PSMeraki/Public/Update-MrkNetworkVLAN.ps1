@@ -1,11 +1,11 @@
 function Update-MrkNetworkVLAN {
     <#
     .SYNOPSIS
-    Adds a VLAN to a Meraki network
+    Updates settings of a VLAN in a Meraki network
     .DESCRIPTION
-    Adds a VLAN to a Meraki network, identifying the network with the Network ID, to find an id use get-MrkNetwork
+    Updates settings of a VLAN in a Meraki network, identifying the network with the Network ID. To find an id use get-MrkNetwork.
     .EXAMPLE
-    Update-MrkNetworkVLAN -Networkid X_111122223639801111 -id 500 -Name DATA -subnet 10.11.12.0 -applianceIP 10.11.12.254
+    Update-MrkNetworkVLAN -Networkid X_111122223639801111 -id 500 -Name DATA -subnet 10.11.12.0/24 -applianceIP 10.11.12.254
     .PARAMETER networkId 
     id of a network (get-MrkNetworks).id[0]
     .PARAMETER id
@@ -106,7 +106,7 @@ function Update-MrkNetworkVLAN {
         }
     }
 
-    $body | ConvertTo-Json -Depth 10
+    write-verbose $($body | ConvertTo-Json -Depth 10)
 
     $request = Invoke-MrkRestMethod -Method Put -ResourceID ('/networks/' + $networkId + '/vlans/' + $id) -Body $body
     return $request
