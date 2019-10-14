@@ -7,15 +7,21 @@ Function Update-MrkNetworkTrafficAnalysis {
     .EXAMPLE
     This will set the TrafficAnalysis to detailed of traffic to/from the IP-range '10.24.0.0/16' labeled as 'DC Traffic'.
     Update-MrkNetworkTrafficAnalysis -networkId N_1234567890123456 -action add -mode detailed -name 'DC Traffic' -type ipRange -value '10.24.0.0/16'
+    .EXAMPLE
+    This will remove rule identified by #2.
+    Update-MrkNetworkTrafficAnalysis -networkId N_1234567890123456 -action remove -ruleId 2
+    .EXAMPLE
+    This will add a new rule at a certain position (top/bottom/specific number).
+    Update-MrkNetworkTrafficAnalysis -networkId N_1234567890123456 -action add -ruleId 2 -name 'DC Traffic' -type ipRange -value '10.24.0.0/26'
     .PARAMETER networkId
     The networkId of the network. Get the id using Get-MrkNetwork.
     .PARAMETER ruleId
     The Traffic analysis custom pie chart # id to remove or insert the new rule at.
     For example to remove rule identified by #2 run:
-        Update-MrkNetworkTrafficAnalysis -action remove -ruleId 2
+        Update-MrkNetworkTrafficAnalysis -networkId N_1234567890123456 -action remove -ruleId 2
 
     For example to add a new rule at a certain position (top/bottom/specific number) run:
-        Update-MrkNetworkTrafficAnalysis -action add -ruleId 2 -name 'DC Traffic' -type ipRange -value '10.24.0.0/26'
+        Update-MrkNetworkTrafficAnalysis -networkId N_1234567890123456 -action add -ruleId 2 -name 'DC Traffic' -type ipRange -value '10.24.0.0/26'
     When the ruleId is omitted the new rule is simply added at the end.
     
     .PARAMETER action
@@ -37,12 +43,20 @@ Function Update-MrkNetworkTrafficAnalysis {
         if action is 'remove' the bottom-rule will be removed.
     When you specify a numeric value the rule will either be added into the rule-collection at that position (action 'add')
         or be removed from the rule-collection at that position (action 'remove')
-    .PARAMETER commmit
+    .PARAMETER commit
+    Default $true.
     Optional parameter to specify if you want to commit the change immediately or only add or remove the rule in the GLOBAL rulebase variable $global:MXTrafficAnalysis.
     This variable $global:MXTrafficAnalysis is retrieved from the network unless the RESET switch is provided and that $global:MXTrafficAnalysis is used to add/remove rules.
-    After each add/remove iteration the $global:MXTrafficAnalysis is updated and once you provide the commit swith that leads to the API call to meraki.
+    After each add/remove iteration the $global:MXTrafficAnalysis is updated and once you provide the -commit:$true (default) that leads to the API call to meraki. If you
+    use the function with -commit:$false you only update the global configState ($global:MXTrafficAnalysis). This is used to reduce the amount of API calls and make in-momory 
+    object changes and commit the status in one final API call.
     .PARAMETER configState
-    Optional parameter to provide the ruleset to work with. When provided without any other rule remove/add action and use -commit, you apply the set as provided.
+    Optional parameter to provide the ruleset to work with. When provided without any other rule remove/add action and use -commit:$true, you apply the set as provided.
+    The configState is the object read from the actual Meraki network using: $mrkConfigState = Get-MrkNetworkTrafficAnalysis. This enables the user of the function to
+    save a state to file and re-apply, or to make multiple changes to the configState object before writing the final state to Meraki using the PUT/POST rest API call.
+    .PARAMETER overRideNWid
+    Optional parameter used in conjunction with parameter configState to allow the provided configState object to be applied to this network while
+        the provided configState settings were retrieved from another networkId.
     #>
 
     [CmdletBinding()]
@@ -54,35 +68,50 @@ Function Update-MrkNetworkTrafficAnalysis {
         [Parameter()][ValidateSet('host', 'port', 'ipRange')][string]$type,
         [Parameter()][string]$value,
         [Parameter()][string]$ruleId,
-        [Parameter()][switch]$commmit,
-        [Parameter()]$configState
+        [Parameter()][bool]$commit=$true,
+        [Parameter()]$mrkConfigState,
+        [Parameter()][switch]$overRideNWid
     )
 
-    if($configState){
-        $global:MXTrafficAnalysis = $configState
-    }
-    elseif($global:MXTrafficAnalysis.count -gt 0 -and $global:MXNetworkId -eq $networkId){
+    $FunctionScope = $MyInvocation.MyCommand.Noun
 
+    #if the mrkConfigState is provided as parameter and the functionscope matches the configType in the configState we use the provided state property.
+    if($PSBoundParameters.Keys.Contains("mrkConfigState")){
+        # Start to work with the provided config state object. Set this into the $global:mrkConfigState to
+        #   make it available for consequtive function calls for the same object.
+        # The settings in the NetworkTrafficAnalysis are generic and can be applied to any network without conflicts so we can allow overRideNWid
+        if( $mrkConfigState.configType -eq $FunctionScope -and 
+           ($mrkConfigState.NetworkId -eq $networkId -or $overRideNWid) ){
+            
+            $global:mrkConfigState = $mrkConfigState
+
+        }
+        
+    }
+    elseif($global:mrkConfigState.NetworkId -eq $networkId -and $global:mrkConfigState.configType -eq 'MrkNetworkTrafficAnalysis'){
+        # The $global:mrkConfigState is already set and contains settings and the provided networkId matches the NetworkId in the provided state.
     }
     else{
         #get existing rules if any because either the networkId changed between commands
         #or the $global:MXTrafficAnalysis ruleset is empty ...
-        $global:MXTrafficAnalysis = Get-MrkNetworkTrafficAnalysis -networkId $networkId
+        $global:mrkConfigState = Get-MrkNetworkTrafficAnalysis -networkId $networkId
+        $global:mrkConfigState | Add-Member -MemberType NoteProperty -Name 'networkId' -Value $networkId
+        $global:mrkConfigState | Add-Member -MemberType NoteProperty -Name 'configType' -Value $FunctionScope
     }
 
-    if($null -eq $global:MXTrafficAnalysis.customPieChartItems){
+    if($null -eq $global:mrkConfigState.customPieChartItems){
         Write-Verbose 'current ruleset empty. initialise empty customPieChartItems array'
         [System.Collections.ArrayList]$customPieChartItems = @();
     }
     else{
         Write-Verbose 'current ruleset exists. Assign them to customPieChartItems array'
-        [System.Collections.ArrayList]$customPieChartItems = $global:MXTrafficAnalysis.customPieChartItems
+        [System.Collections.ArrayList]$customPieChartItems = $global:mrkConfigState.customPieChartItems
     }
 
     #get the current mode setting in case not provided 
-    if(-not $PSBoundParameters.Keys.Contains("mode")){$mode = $global:MXTrafficAnalysis.mode}
+    if(-not $PSBoundParameters.Keys.Contains("mode")){$mode = $global:mrkConfigState.mode}
 
-    Write-Verbose "existing trafficAnalysisConfig before update: $global:MXTrafficAnalysis"
+    Write-Verbose "existing trafficAnalysisConfig before update: $global:mrkConfigState"
 
     switch($action){
         'add' {
@@ -111,10 +140,14 @@ Function Update-MrkNetworkTrafficAnalysis {
             Write-Verbose "inserting a rule at position $pos in the array. Specified ruleId $ruleId"
 
             $customPieChartItems.Insert($pos,$newRule)
-            $global:MXTrafficAnalysis = [PSCustomObject]@{
-                mode = $mode
-                customPieChartItems = $customPieChartItems
-            }
+
+            #update the mrkConfigState object 
+            $global:mrkConfigState.mode = $mode
+            $global:mrkConfigState.customPieChartItems = $customPieChartItems
+            #$global:mrkConfigState = [PSCustomObject]@{
+            #    mode = $mode
+            #    customPieChartItems = $customPieChartItems
+            #}
         }
         'remove' {
             if($PSBoundParameters.keys.Contains("ruleId")){
@@ -124,7 +157,8 @@ Function Update-MrkNetworkTrafficAnalysis {
                     if ($ruleId -gt $ruleCount){
                         Write-Host invalid ruleId value provided. Use a max of $ruleCount or type top/bottom;
                         break
-                    }else{
+                    }
+                    else{
                         #substract 1 from the provided ruleId as the displayed values start at 1 and the array starts at 0
                         $pos = $ruleId -1
                     }
@@ -133,26 +167,31 @@ Function Update-MrkNetworkTrafficAnalysis {
                 Write-Verbose "removing a rule from position $pos in the array. Specified ruleId '$ruleId'"
 
                 $customPieChartItems.RemoveAt($pos)
-                $global:MXTrafficAnalysis = [PSCustomObject]@{
-                    mode = $mode
-                    customPieChartItems = $customPieChartItems
-                }
+
+                #update the mrkConfigState object
+                $global:mrkConfigState.mode = $mode
+                $global:mrkConfigState.customPieChartItems = $customPieChartItems
+                # $global:mrkConfigState = [PSCustomObject]@{
+                #     mode = $mode
+                #     customPieChartItems = $customPieChartItems
+                # }
             } else {
                 Write-Error 'you must provide a ruleId to remove. Use top/bottom or a number as shown in the dashboard in the traffic analysis section'
                 break
             }
         }
         'disable' {
-            $global:MXTrafficAnalysis = [PSCustomObject]@{
+            #update/clear the complete mrkConfigState object with just the disabled status.
+            $global:mrkConfigState = [PSCustomObject]@{
                 mode = 'disabled'
             }
         }
     }
 
-    Write-Verbose "updated body element $($global:MXTrafficAnalysis)"
+    Write-Verbose "updated body element $($global:mrkConfigState)"
 
     if($commit){
-        $request = Invoke-MrkRestMethod -Method PUT -ResourceID ('/networks/' + $networkId + '/trafficAnalysisSettings') -body $global:MXTrafficAnalysis
+        $request = Invoke-MrkRestMethod -Method PUT -ResourceID ('/networks/' + $networkId + '/trafficAnalysisSettings') -body $global:mrkConfigState
         return $request
     }
 }

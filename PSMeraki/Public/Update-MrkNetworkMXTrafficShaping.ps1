@@ -8,18 +8,24 @@ function Update-MrkNetworkMXTrafficShaping {
     If either perClientBandwidthLimitUp or perClientBandwidthLimitDown is not specified and the perClientBandwidthSetting is 'custom',
         then these 2 properties are set to the same value (up/down limit equal).
     .EXAMPLE
-
+    This function call will add a rule to a blanc (resetRules $true) ruleset for all traffic to port 22 to tag the traffic as highPriority and ignore networkwide bandwidth settings.
+    Update-MrkNetworkMXTrafficShaping -networkId N_1234567890123456 -action addRule -resetRules $true -definitionType port -definitionValue 22 -perClientBandwidthSetting ignore -trafficPriority high
     .EXAMPLE
-
+    This function call will add a ruledefinition to the first/only existing rule for all traffic to port 5900
+    Update-MrkNetworkMXTrafficShaping -networkId $OTITNW.id -action addRuleDefinition -definitionType port -definitionValue 5900
+    .EXAMPLE
+    This function call will add a ruledefinition to the existing ruleId 2 for all traffic to iprange "10.24.0.0/16"
+    Update-MrkNetworkMXTrafficShaping -networkId $OTITNW.id -action addRuleDefinition -ruleId 2 -definitionType ipRange -definitionValue "10.24.0.0/16"
     .PARAMETER networkId
     Parameter to specify a specific networkId.
     .PARAMETER action
-    Either "addRule", "removeRule", "addRuleDefinition", "removeRuleDefinition", "changeGlobalSetting", "changeRuleSetting"
+    Either "addRule", "removeRule", "addRuleDefinition", "removeRuleDefinition", "changeGlobalSetting", "changeRuleSetting", "set"
     In Meraki Traffic Shaping you add/remove Rules that show as rule 1, rule 2, etc. Each of these shaping rules get the traffic priority and bandwidth and within each of these share-rules you
         add/remove the ruleEntries like hosts/ports/ips/applications.
     addRule: adds a new main shaping-rule and requires the definitionType, definitionValue.
     removeRule: removes the rule specified by ruleId. This is the rule# as shown in the dashboard of the MX network.
     updateRule: updates the rule specified by ruleId. based on the parameters provided to the functioncall the active/working rule is updated and the new, full ruleset is applied.
+    set: simply set the configuration using the provided settings in $mrkConfigState.
     .PARAMETER ruleId
     The rule-id of the rule you want to add/remove a definition to. Must be present when updating an existing ruleset (add/remove a definition) and more than 1 priorization rules are present.
     .PARAMETER newRuleId
@@ -50,51 +56,65 @@ function Update-MrkNetworkMXTrafficShaping {
     .PARAMETER commit
     Switch to control whether to commit the current rule-state of if a subsequent function-call is to be executed to add/remove
     other rules or rule-entries.
-    .PARAMETER configState
-    Parameter to pass an object that contains a (complete) set of rules you need to apply or start with.
+    .PARAMETER mrkConfigState
+    Parameter to pass an object that contains a complete configuration you need to apply or start working with.
     Usefull to reapply settings based on a saved configuration.
+    .PARAMETER overRideNWid
+    Optional parameter used in conjunction with parameter mrkConfigState to allow the provided mrkConfigState object to be applied to this network while
+        the provided mrkConfigState settings were retrieved from another networkId.
     #>
     [CmdletBinding()]
     Param (
         [Parameter(Mandatory)][string]$networkId,
+        [Parameter(Mandatory)][ValidateNotNullOrEmpty()]
+        [ValidateSet("addRule", "removeRule", "addRuleDefinition", "removeRuleDefinition", "changeGlobalSetting", "changeRuleSetting", "set")]
+            [string]$action,
         [Parameter()]$ruleId,
         [Parameter()]$newRuleId,
-        [Parameter(Mandatory)][ValidateNotNullOrEmpty()][ValidateSet("addRule", "removeRule", "addRuleDefinition", "removeRuleDefinition", "changeGlobalSetting", "changeRuleSetting")][string]$action,
         [Parameter()][ValidateSet("application", "applicationCategory","host","port","ipRange","localNet")][string]$definitionType,
         [Parameter()]$definitionValue,
-        [Parameter(Mandatory=$false)][ValidateSet("network default", "ignore", "custom")][string]$perClientBandwidthSetting="network default",
-        [Parameter(Mandatory=$false)]$perClientBandwidthLimitUp,
-        [Parameter(Mandatory=$false)]$perClientBandwidthLimitDown,
-        [Parameter(Mandatory=$false)]$dscpTagValue,
-        [Parameter(Mandatory=$false)][ValidateSet("high", "normal", "low")][string]$trafficPriority="normal",
-        [Parameter(Mandatory=$false)][ValidateSet($true, $false)][bool]$defaultRulesEnabled,
+        [Parameter()][ValidateSet("network default", "ignore", "custom")][string]$perClientBandwidthSetting="network default",
+        [Parameter()]$perClientBandwidthLimitUp,
+        [Parameter()]$perClientBandwidthLimitDown,
+        [Parameter()]$dscpTagValue,
+        [Parameter()][ValidateSet("high", "normal", "low")][string]$trafficPriority="normal",
+        [Parameter()][ValidateSet($true, $false)][bool]$defaultRulesEnabled,
         [Parameter()][switch]$resetRules,
         [Parameter()][switch]$resetRuleDefinitions,
-        [Parameter()][switch]$commit,
-        [Parameter()]$configState
+        [Parameter()][bool]$commit=$true,
+        [Parameter()]$mrkConfigState,
+        [Parameter()][switch]$overRideNWid
     )
 
+    $FunctionScope = $MyInvocation.MyCommand.Noun
+
     [System.Collections.ArrayList]$ruleset = @()
-    if($PSBoundParameters.ContainsKey("configState")){
-        #the configState is provided so we (re)set the $global:MXTrafficShapingConfig to this value.
-        #there is no validation (yet) to check if the provided object is goog. The Meraki RestAPI will throw an error
-        #in case it is invalid when commited.
-        $global:MXTrafficShapingConfig = $configState
+    if($PSBoundParameters.ContainsKey("mrkConfigState")){
+        # Start to work with the provided config state object. Set this into the $global:mrkConfigState to
+        #   make it available for consequtive function calls for the same object.
+        # The settings in the NetworkTrafficAnalysis are generic and can be applied to any network without conflicts so we can allow overRideNWid
+        if( $mrkConfigState.configType -eq $FunctionScope -and 
+           ($mrkConfigState.NetworkId -eq $networkId -or $overRideNWid) ){
+            
+            $global:mrkConfigState = $mrkConfigState
+
+        }
     }
-    elseif($global:MXTrafficShapingConfig.rules.count -gt 0 -and $global:MXNetworkId -eq $networkId){
-        #simply use the global trafficShapingConfig to (continue to) modify and/or commit
+    elseif($global:mrkConfigState.rules.count -gt 0 -and $mrkConfigState.NetworkId -eq $networkId){
+        #simply use the global:mrkConfigState to (continue to) modify and/or commit
     }
     else{
-        #either the global trafficShapingConfig isn't set ot the networkId changed since the last command.
-        #get the current config and store it in global trafficShapingConfig
-        $global:MXTrafficShapingConfig = Get-MrkNetworkMXTrafficShaping -networkId $networkId
-        $global:MXNetworkId = $networkId
+        #either the global mrkConfigState isn't set ot the networkId changed since the last command.
+        #get the current config and scope and store them in global mrkConfigState properties
+        $global:mrkConfigState = Get-MrkNetworkMXTrafficShaping -networkId $networkId
+        $global:mrkConfigState | Add-Member -MemberType NoteProperty -Name 'networkId' -Value $networkId
+        $global:mrkConfigState | Add-Member -MemberType NoteProperty -Name 'configType' -Value $FunctionScope
     }
     
     if ( -not $resetRules ){
         #get the current set of rules for the MX network and determine or ask for the rule to work on (add/remove/change)
         #after this function the $workRule is either a new/empty object or the current state of an existing rule in which to make changes.
-        [System.Collections.ArrayList]$ruleset = $global:MXTrafficShapingConfig.rules
+        [System.Collections.ArrayList]$ruleset = $global:mrkConfigState.rules
         #only if a specific rule/definition action is intended the rule-entry to work on must be captured in $workRule. Else we simply keep the full ruleset.
         if( $action -in "addRuleDefinition", "removeRuleDefinition", "changeRuleSetting", "removeRule" ){
             switch ($ruleset.Count)
@@ -119,7 +139,7 @@ function Update-MrkNetworkMXTrafficShaping {
     }
 
     if (-not $PSBoundParameters.ContainsKey("defaultRulesEnabled")){
-        $defaultRulesEnabled = $global:MXTrafficShapingConfig.defaultRulesEnabled;
+        $defaultRulesEnabled = $global:mrkConfigState.defaultRulesEnabled;
     }
 
     switch ($action)
@@ -147,8 +167,8 @@ function Update-MrkNetworkMXTrafficShaping {
                 if (-not $PSBoundParameters.ContainsKey("perClientBandwidthLimitDown")){
                     $perClientBandwidthLimitDown = Read-Host -Prompt 'pls specify the numeric LimitDown in kbps. E.g 2048 for 2048 kbps (2Mbps)';
                 }
-                $bandwidthLimits = [hashtable]@{limitUp = $perClientBandwidthLimitUp ;LimitDown = $perClientBandwidthLimitDown};
-                $perClientBandwidthLimits = [hashtable]@{settings = $perClientBandwidthSetting; bandwidthLimits = $bandwidthLimits};
+                $bandwidthLimits = [hashtable]@{limitUp = $perClientBandwidthLimitUp ; LimitDown = $perClientBandwidthLimitDown};
+                $perClientBandwidthLimits = [hashtable]@{settings = $perClientBandwidthSetting ; bandwidthLimits = $bandwidthLimits};
             } else {
                 $perClientBandwidthLimits = [hashtable]@{settings = $perClientBandwidthSetting};
             }
@@ -168,27 +188,33 @@ function Update-MrkNetworkMXTrafficShaping {
             }
             $applyRules += $newrule
 
-            $global:MXTrafficShapingConfig = [PSCustomObject]@{
-                defaultRulesEnabled = $defaultRulesEnabled
-                rules = $applyRules
-            }
+            #update the mrkConfigState object properties
+            $global:mrkConfigState.defaultRulesEnabled = $defaultRulesEnabled
+            $global:mrkConfigState.rules = $applyRules
+            # $global:MXTrafficShapingConfig = [PSCustomObject]@{
+            #     defaultRulesEnabled = $defaultRulesEnabled
+            #     rules = $applyRules
+            # }
         }
         "removeRule" {
             #the rule to remove is specified by the rule# number as shown in the dashboard. The ruleId parameter value is already checked.
             $ruleset.RemoveAt($ruleId -1)
             $applyRules = $ruleset
 
-            $global:MXTrafficShapingConfig = [PSCustomObject]@{
-                defaultRulesEnabled = $defaultRulesEnabled
-                rules = $applyRules
-            }
+            #update the mrkConfigState object properties
+            $global:mrkConfigState.defaultRulesEnabled = $defaultRulesEnabled
+            $global:mrkConfigState.rules = $applyRules
+            # $global:mrkConfigState = [PSCustomObject]@{
+            #     defaultRulesEnabled = $defaultRulesEnabled
+            #     rules = $applyRules
+            # }
         }
         "addRuleDefinition" {
-            #this adds a new definition to the provided existing $workRule as selected by $ruleId
-            #the workrule properties are updated based on the provided parameters and values.
-            #the updated definitions property is written into the $workRule.definitions
-            #the updated workRule is written back into the rule-array at the same position in the array
-            #the updated rules and defaultRulesEnabled setting is applied into the trafficShapingConfig
+            #This adds a new definition to the $workRule as selected by $ruleId
+            #The workrule properties are updated based on the provided parameters and values.
+            #The updated definitions property is written into the $workRule.definitions
+            #The updated workRule is written back into the rule-array at the same position in the array
+            #The updated rules and defaultRulesEnabled setting is applied into $global:mrkConfigState
             [System.Collections.ArrayList]$definitions = @($workRule.definitions);
             if ( $definitionType -match "application" ){
                 $PSoValue = [pscustomobject]$definitionValue;
@@ -201,7 +227,7 @@ function Update-MrkNetworkMXTrafficShaping {
             }
             $definitions += $ruleDefinition;
 
-            #collect the current values of the other rule properties. check the $psboundParameters in case these are provided
+            #collect the current values of the other rule properties. check the $psboundParameters in case these are provided in-line
             if(-not $PSBoundParameters.ContainsKey("perClientBandwidthSetting")){
                 $perClientBandwidthLimits = $workRule.perClientBandwidthLimits;
             } else {
@@ -239,17 +265,21 @@ function Update-MrkNetworkMXTrafficShaping {
             $ruleset.Insert($ruleId -1, $newrule)
             $applyRules = $ruleset
             
-            $global:MXTrafficShapingConfig = [PSCustomObject]@{
-                defaultRulesEnabled = $defaultRulesEnabled
-                rules = $applyRules
-            }
+            #update the mrkConfigState object properties
+            $global:mrkConfigState.defaultRulesEnabled = $defaultRulesEnabled
+            $global:mrkConfigState.rules = $applyRules
+
+            # $global:mrkConfigState = [PSCustomObject]@{
+            #     defaultRulesEnabled = $defaultRulesEnabled
+            #     rules = $applyRules
+            # }
 
         }
         Default {}
     }
 
     if($commit){
-        $request = Invoke-MrkRestMethod -Method PUT -ResourceID ('/networks/' + $networkId + '/trafficShaping') -body $global:MXTrafficShapingConfig ;
+        $request = Invoke-MrkRestMethod -Method PUT -ResourceID ('/networks/' + $networkId + '/trafficShaping') -body $global:mrkConfigState ;
         return $request
     }
 
