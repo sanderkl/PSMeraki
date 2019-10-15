@@ -40,14 +40,14 @@ function Invoke-MrkRestMethod {
         if ($_.exception.message -match [regex]::Escape('(429)')){
             Write-Verbose "Meraki reports 'Too many API Rquests', sleeping 1 second and rerunning the same request"
             Start-Sleep 1
-             $request = Invoke-RestMethod -Method $Method -ContentType 'application/json' -Headers $mrkRestApiHeader -Uri $uri -Body ($body | ConvertTo-Json -Depth 10)
+             $request = Invoke-RestMethod -Method $Method -ContentType 'application/json; charset=utf-8' -Headers $mrkRestApiHeader -Uri $uri -Body ($body | ConvertTo-Json -Depth 10)
             # Invoke-MrkRestMethod -ResourceID $ResourceID -Method $method -body $body;
         } elseif ($_.exception.message -match [regex]::Escape('(308)')){
              Write-Verbose "Meraki reports redirection. Request the orgBaseUri and rerun the same request"
              $global:orgBaseUri = $null
              Get-MrkOrgEndpoint # reset the $global:orgBaseUri variable to get the non-default api.meraki.com URI
              $uri = $global:orgBaseUri + $ResourceID
-             $request = Invoke-RestMethod -Method $Method -ContentType 'application/json' -Headers $mrkRestApiHeader -Uri $uri -Body ($body | ConvertTo-Json -Depth 10)
+             $request = Invoke-RestMethod -Method $Method -ContentType 'application/json; charset=utf-8' -Headers $mrkRestApiHeader -Uri $uri -Body ($body | ConvertTo-Json -Depth 10)
         } else {
             Get-RestError
         }
