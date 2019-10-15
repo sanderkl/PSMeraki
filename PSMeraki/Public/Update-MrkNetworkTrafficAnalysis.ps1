@@ -50,7 +50,7 @@ Function Update-MrkNetworkTrafficAnalysis {
     After each add/remove iteration the $global:MXTrafficAnalysis is updated and once you provide the -commit:$true (default) that leads to the API call to meraki. If you
     use the function with -commit:$false you only update the global configState ($global:MXTrafficAnalysis). This is used to reduce the amount of API calls and make in-momory 
     object changes and commit the status in one final API call.
-    .PARAMETER configState
+    .PARAMETER mrkConfigState
     Optional parameter to provide the ruleset to work with. When provided without any other rule remove/add action and use -commit:$true, you apply the set as provided.
     The configState is the object read from the actual Meraki network using: $mrkConfigState = Get-MrkNetworkTrafficAnalysis. This enables the user of the function to
     save a state to file and re-apply, or to make multiple changes to the configState object before writing the final state to Meraki using the PUT/POST rest API call.
