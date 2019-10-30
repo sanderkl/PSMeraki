@@ -25,7 +25,7 @@ Function Add-MrkNetworkStaticRoute{
         [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$gatewayIp,
         [Parameter()][ValidateNotNullOrEmpty()][boolean]$enabled=$true
     )
-    $body  = @{
+    $body = @{
         "name" = $name
         "subnet" = $subnet
         "gatewayIp" = $gatewayIp
