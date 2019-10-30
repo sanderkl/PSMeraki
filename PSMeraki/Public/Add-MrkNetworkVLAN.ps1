@@ -110,9 +110,9 @@ function Add-MrkNetworkVLAN {
 
     $request = Invoke-MrkRestMethod -Method POST -ResourceID ('/networks/' + $networkId + '/vlans') -Body $body
 
-    #during POST (create new) VLAN the API doesn't handle the setting for DHCP mode other than 'Run a DHCP server'. By default the DHCP mode is enabled. In case the DHCP must be off,
+    #During POST (create new) VLAN the API doesn't handle the setting for DHCP mode other than 'Run a DHCP server'. By default the DHCP mode is enabled. In case the DHCP must be off,
     # the Update-MrkNetworkVLAN function is called to update the Network VLAN DHCP setting using the same variables for the POST action.
-    #additionally the REST API ignores the $dnsNameservers value during the POST and always sets "upstream_dns" which is also corrected during the update (PUT) call 
+    #Additionally the REST API ignores the $dnsNameservers value during the POST and always sets "upstream_dns" which is also corrected during the update (PUT) call 
     If ($dhcpHandling -eq "Do not respond to DHCP requests" -or $dnsNameservers -ne "upstream_dns"){
         $request = Update-MrkNetworkVLAN -networkId $networkId -id $id -name $name -subnet $subnet -applianceIp $applianceIp -dhcpHandling $dhcpHandling -dnsNameservers $dnsNameservers -reservedIpRanges $reservedIpRanges
         return $request
