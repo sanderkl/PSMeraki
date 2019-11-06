@@ -75,18 +75,18 @@ function Add-MrkNetworkVLAN {
     foreach ($key in $PSBoundParameters.keys){
         switch($key){
             "reservedIpRanges" {
-                if($null -ne $reservedIpRanges){
-                    $tmpCol = @()
-                    forEach($res in $reservedIpRanges){
-                        $tmpCol += New-Object -TypeName PSObject -Property @{
-                            start = ($res.split(","))[0]
-                            end = ($res.split(","))[1]
-                            comment = ($res.split(","))[2]
-                        }
-                    }
-                    [array]$ArrReservedIpRanges = $tmpCol
-                }
-                $body.$key = $ArrReservedIpRanges
+                # if($null -ne $reservedIpRanges){
+                #     $tmpCol = @()
+                #     forEach($res in $reservedIpRanges){
+                #         $tmpCol += New-Object -TypeName PSObject -Property @{
+                #             start = ($res.split(","))[0]
+                #             end = ($res.split(","))[1]
+                #             comment = ($res.split(","))[2]
+                #         }
+                #     }
+                #     [array]$ArrReservedIpRanges = $tmpCol
+                # }
+                # $body.$key = $ArrReservedIpRanges
             }
             "dnsNameservers" {
                 $body.$key = $dnsNameservers -join "`n"
