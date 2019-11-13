@@ -6,6 +6,8 @@
     blah 
     .EXAMPLE
     set-MrkSwitchPort -switchname ($locationcode+"-MS120-SW1") -Port $i -enabled True -Portname DATA/VOICE -vlan 500 -voicevlan 600 -type access -POEenabled True 
+    .PARAMETER serial 
+    Teh serial number of the switch
     .PARAMETER switchname 
     the name of the switch
     .PARAMETER port 
@@ -30,70 +32,57 @@
 
     param (
     
-        [Parameter(Mandatory = $true)][String][ValidateNotNullOrEmpty()]$switchname,
-        [Parameter(Mandatory = $true)][String][ValidateNotNullOrEmpty()]$port,
-        [Parameter()][String][ValidateNotNullOrEmpty()]$portName="",
-        [Parameter()][String][ValidateNotNullOrEmpty()]$tags="",
-        [Parameter()][String][ValidateSet('True', 'False')]$enabled="False",
-        [Parameter()][String][ValidateSet('True', 'False')]$POEenabled="False",
-        [Parameter()][String][ValidateSet('trunk','access')]$type="",
-        [Parameter()][String][ValidateNotNullOrEmpty()]$vlan="",
-        [Parameter()][String][ValidateNotNullOrEmpty()]$voiceVlan=""
-        #[Parameter(Mandatory = $false)][Bool][ValidateNotNullOrEmpty()]$isolation,
-        #[Parameter(Mandatory = $false)][Bool][ValidateNotNullOrEmpty()]$rstp,
-        #[Parameter(Mandatory = $false)][String][ValidateNotNullOrEmpty()]$stp,
-        #[Parameter(Mandatory = $false)][String][ValidateNotNullOrEmpty()]$AccessPolicyNumber,
-        #[Parameter(Mandatory = $false)][String][ValidateNotNullOrEmpty()]$linkNegotiation
+        [Parameter(Mandatory = $true)][string][ValidateNotNullOrEmpty()]$serial,
+        [Parameter(Mandatory = $true)][string][ValidateNotNullOrEmpty()]$number,
+        [Parameter()][string][ValidateNotNullOrEmpty()]$name="",
+        [Parameter()][string][ValidateNotNullOrEmpty()]$tags="",
+        [Parameter()][bool][ValidateSet($true,$false)]$enabled=$false,
+        [Parameter()][bool][ValidateSet($true,$false)]$poeEnabled=$false,
+        [Parameter()][string][ValidateSet('trunk','access')]$type="",
+        [Parameter()][string][ValidateNotNullOrEmpty()]$vlan="",
+        [Parameter()][string][ValidateNotNullOrEmpty()]$voiceVlan="",
+        [Parameter()][string[]][ValidateNotNullOrEmpty()]$allowedVlans=""
+        #[Parameter(Mandatory = $false)][Bool][ValidateNotNullOrEmpty()]$isolationEnabled,
+        #[Parameter(Mandatory = $false)][Bool][ValidateNotNullOrEmpty()]$rstpEnabled,
+        #[Parameter(Mandatory = $false)][String][ValidateNotNullOrEmpty()]$stpGuard,
+        #[Parameter(Mandatory = $false)][String][ValidateNotNullOrEmpty()]$accessPolicyNumber,
+        #[Parameter(Mandatory = $false)][String][ValidateNotNullOrEmpty()]$linkNegotiation,
+        #[Parameter(Mandatory = $false)][String][ValidateNotNullOrEmpty()]$portScheduleId,
+        #[Parameter(Mandatory = $false)][String][ValidateNotNullOrEmpty()]$udld,
+        #[Parameter(Mandatory = $false)][String][ValidateNotNullOrEmpty()]$macWhitelist,
+        #[Parameter(Mandatory = $false)][String][ValidateNotNullOrEmpty()]$stickyMacWhitelist,
+        #[Parameter(Mandatory = $false)][String][ValidateNotNullOrEmpty()]$stickyMacWhitelistLimit
     )
+
+    $mrkConfig = Get-MrkSwitchPort -serial $serial -number $number
+
+    if ($mrkConfig){
+
+    #$api = @{
+
+    #     "endpoint" = 'https://n35.meraki.com/api/v0'
     
-   
+    #}
 
-    $enabledx=$false
-    if ($enabled -eq "True") { $enabledx=$true} else { $enabledx=$false}
-
-    $poeenabledx=$false
-    if ($poeenabled -eq "True") { $poeenabledx=$true} else { $poeenabledx=$false}
-
-
-    $switch = Get-MrkSwitch $network.id | Where-Object {$_.name -eq $switchname}
-
-    if ($switch){
-
-        #$api = @{
-
-       #     "endpoint" = 'https://n35.meraki.com/api/v0'
-    
-        #}
-
-        $body = @{
-            "name"=$Portname
-            "enabled"=$enabledx
-            "tags"=$tags
-            "poeEnabled"=$poeenabledx
-            "type"=$type
-            "vlan"=$vlan
-            "voiceVlan"=$voicevlan
-            #"isolationEnabled"=$isolation
-            #"rstpEnabled"=$rstp
-            #"stpGuard"=$stp
-            #"accessPolicyNumber"=$accessPolicyNumber
-            #"linkNegotiation"=$linkNegotiation
+        Foreach($key in $PSBoundParameters.Keys){
+            switch ($key){
+                'serial' {}
+                'allowedVlans' {
+                    $mrkConfig.$key = $PSBoundParameters.item($key) -join ','
+                } 
+                default {
+                    $mrkConfig.$key = $PSBoundParameters.item($key)
+                }
             }
+        }
 
+        $mrkConfig.psobject.properties.Remove('stickyMacWhitelistLimit')
+        $mrkConfig.psobject.properties.Remove('stickyMacWhitelist')
+        $mrkConfig.psobject.properties.Remove('macWhitelist')
 
-        #$body = convertto-json ($body)
+        Write-Verbose $mrkConfig | ConvertTo-Json -Depth 10
 
-        #$header = @{
-        
-        #    "X-Cisco-Meraki-API-Key" = $mrkapi
-        #    "Content-Type" = 'application/json'
-        
-       # }
-
-        #$api.url = "/devices/" + $switch.serial + "/switchPorts/"+ $port
-        #$uri = $api.endpoint + $api.url
-        #$request = (Invoke-RestMethod -Method PUT -Uri $uri -Headers $header -Body $body)
-        $request = (Invoke-mrkRestMethod -Method PUT -ResourceID ('/devices/' + $switch.serial + '/switchPorts/' + $port) -Body $body)
+        $request = (Invoke-mrkRestMethod -Method PUT -ResourceID ('/devices/' + $serial + '/switchPorts/' + $number) -Body $mrkConfig)
         return $request
     
     }

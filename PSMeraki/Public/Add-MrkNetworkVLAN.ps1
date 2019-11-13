@@ -58,8 +58,8 @@ function Add-MrkNetworkVLAN {
         [Parameter(Mandatory)][ValidateNotNullOrEmpty()][string]$name,
         [Parameter(Mandatory)][ValidateNotNullOrEmpty()][string]$subnet,
         [Parameter(Mandatory)][ValidateNotNullOrEmpty()][string]$applianceIp,
-        [Parameter()][ValidateNotNullOrEmpty()][string[]]$dnsNameservers,
-        [Parameter()][ValidateNotNullOrEmpty()][string[]]$reservedIpRanges,
+        [Parameter()][string[]]$dnsNameservers,
+        [Parameter()][string[]]$reservedIpRanges,
         [Parameter()][ValidateSet("Do not respond to DHCP requests", "Run a DHCP server", "Relay DHCP to another server")]
             [string]$dhcpHandling,
         [Parameter()][bool]$dhcpBootOptionsEnabled,
@@ -102,6 +102,7 @@ function Add-MrkNetworkVLAN {
                 }
                 $body.$key = $fiaColl
             }
+            "dhcpOptions" {}
             Default {$body.$key = $PSBoundParameters.item($key)}
         }
     }
@@ -114,7 +115,7 @@ function Add-MrkNetworkVLAN {
     # the Update-MrkNetworkVLAN function is called to update the Network VLAN DHCP setting using the same variables for the POST action.
     #Additionally the REST API ignores the $dnsNameservers value during the POST and always sets "upstream_dns" which is also corrected during the update (PUT) call 
     If ($dhcpHandling -eq "Do not respond to DHCP requests" -or $dnsNameservers -ne "upstream_dns"){
-        $request = Update-MrkNetworkVLAN -networkId $networkId -id $id -name $name -subnet $subnet -applianceIp $applianceIp -dhcpHandling $dhcpHandling -dnsNameservers $dnsNameservers -reservedIpRanges $reservedIpRanges
+        $request = Update-MrkNetworkVLAN -networkId $networkId -id $id -name $name -subnet $subnet -applianceIp $applianceIp -dhcpHandling $dhcpHandling -dnsNameservers $dnsNameservers -reservedIpRanges $reservedIpRanges -dhcpOptions $dhcpOptions
         return $request
     } else {
         return $request

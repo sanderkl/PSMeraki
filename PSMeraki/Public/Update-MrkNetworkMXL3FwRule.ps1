@@ -34,16 +34,9 @@ function Update-MrkNetworkMXL3FwRule {
         specify 'add' or 'remove'
         Add will add the rule as new topmost entry.
         Remove will find the rule specified by the unique combination of protocol,destport and destCidr or comment.
-        Add will also simply commit the provided ruleSetState object if no other parameters are provided
     .PARAMETER reset
         optional switch to determine if the cmdlet will keep the existing L3 Firewall rules or start with a clean set of rules and add only this new one.
         not specifying it or assigning $false will keep the existing rules (default).
-    .PARAMETER commit
-        optional parameter to specify if you want to commit the change immediately or only add or remove the rule in the GLOBAL rulebase variable $global:MXL3RuleSetState.
-        This variable $global:MXL3RuleSetState is retrieved from the network unless the RESET switch is provided and that $global:MXL3RuleSetState is used to add/remove rules.
-        After each add/remove iteration the $global:MXL3RuleSetState is updated and once you provide the commit swith that leads to the API call to meraki.
-    .PARAMETER RuleSetState
-        optional parameter to provide the ruleset to work with. When provided without any other rule remove/add action you apply the set as provided.
     #>
     [CmdletBinding()]
     Param (
@@ -51,102 +44,66 @@ function Update-MrkNetworkMXL3FwRule {
         [ValidateNotNullOrEmpty()]
         [String]$networkId,
 
-        [Parameter()]
+        [Parameter(Mandatory)]
         [ValidateNotNullOrEmpty()]
         [String]$comment,
 
-        [Parameter()]
+        [Parameter(Mandatory)]
         [ValidateNotNullOrEmpty()]
         [ValidateSet("allow", "deny")]
         [String]$policy,
 
-        [Parameter()]
+        [Parameter(Mandatory)]
         [ValidateNotNullOrEmpty()]
         [ValidateSet("any","tcp","udp","icmp")]
         [String]$protocol,
 
-        [Parameter()]
+        [Parameter(Mandatory)]
         [ValidateNotNullOrEmpty()]
         [String]$srcPort,
 
-        [Parameter()]
+        [Parameter(Mandatory)]
         [ValidateNotNullOrEmpty()]
         [String]$srcCidr,
 
-        [Parameter()]
+        [Parameter(Mandatory)]
         [ValidateNotNullOrEmpty()]
         [String]$destPort,
 
-        [Parameter()]
+        [Parameter(Mandatory)]
         [ValidateNotNullOrEmpty()]
         [String]$destCidr,
 
         [Parameter(Mandatory)]
         [ValidateNotNullOrEmpty()]
-        [ValidateSet("add", "remove", "set")]
+        [ValidateSet("add", "remove")]
         [String]$action,
 
         [Parameter()]
-        $RuleSetState,
-
-        [Parameter()]
-        [switch]$reset,
-
-        [Parameter()]
-        [switch]$commit
+        [switch]$reset
     )
 
     $ruleset = @()
-    if ($reset){
-        #clear the $global:MXL3RuleSetState and optionally populate it with the provided RuleSetState
-        $global:MXL3RuleSetState = @()
-        if($RuleSetState){
-            $global:MXL3RuleSetState = $RuleSetState
-        }
-    }
-    else{
-        if($RuleSetState) {
-            #use the provided ruleset and store it into/overwrite the $global:MXL3RuleSetState
-            $global:MXL3RuleSetState = $RuleSetState
-        }
-        elseif( $global:MXL3RuleSetState.count -gt 0 -and $global:MXNetworkId -eq $networkId ){
-            #simply assume the $global:MXL3RuleSetState to be good as it is not empty and the global MXNetworkId equals the working id.
-            #need to build in a validation
-        }
-        else {
-            #not resetting and the current network is different from the previous run, or the $global:MXL3RuleSetState isn't initialized yet.
-            #read the current L3 firewallrules into the global $global:MXL3RuleSetState and set the $global:MXNetworkId to this network id.
-            #This makes the $global:MXL3RuleSetState usable for the next iteration if the $RuleSetState and $reset are not provided.
-            $ruleset = Get-MrkNetworkMXL3FwRule -networkId $networkId
-            #the non-default rules are in the array above the default-rule which cannot be set. When retrieving the current rules to add to or remove from
-            #strip the last/bottom rule and store the remaining set in $global:MXL3RuleSetState
-            $global:MXL3RuleSetState = $ruleset[0..$(($ruleset.Count) -2)]
-            $global:MXNetworkId = $networkId
-        }
-        #the non-default rules are in the array above the default-rule which cannot be set. When retrieving the current rules to add to or remove from
-        #extract those custom rules from the array
-        #$ruleset = $MXL3RuleSetState[0..$(($MXL3RuleSetState.Count) -2)]
+    if (-not $reset){
+        $ruleSource = Get-MrkNetworkMXL3FwRule -networkId $networkId
+        #the non-default rules are in the array above the default
+        $ruleset = $ruleSource[0..$(($ruleSource.Count) -2)]
     }
     
     #populate the to-be ruleset first with the existing rules (will be none in case of reset)
-    $applyRules = @();
-    $rulePresent = $false;
-    #in case the MXL3RuleSetState contains entries we compare each entry with the provided parameters and based on the action (add/remove) we remove the entry
-    # from the to-be applyRules collection, leave it in the to-be applyRules collection if it is already present, or add it to the to-be applyRules if it is really new.
-    ForEach ($rule in $global:MXL3RuleSetState){
+    $applyRules = @()
+    ForEach ($rule in $ruleset){
 
-        #if the action is remove and either the current rule comment matches the given comment, or the rule specifications protocol/destPort/destCidr are equal keep the entry in the ruleset. 
+        #if the action is delete and either the current rule comment matches the given comment, or the rule specifications protocol/destPort/destCidr are equal keep the entry in the ruleset. 
         if ($action -eq 'remove' -and `
           (($rule.protocol -eq $protocol -and `
             $rule.destPort -eq $destPort -and `
             $rule.destCidr -eq $destCidr) -or `
             ($rule.comment -eq $comment))){
                 "No longer adding this rule: $comment";
-                $objectModified = $true;
                 continue
             }
 
-        #when adding a new rule the provided function parameters are compared to those of each present rule in the $global:MXL3RuleSetState. if an identical rule already exist we 
         if ($action -eq 'add' -and `
             (($rule.protocol -eq $protocol -and `
               $rule.srcPort -eq $srcPort -and `
@@ -154,11 +111,11 @@ function Update-MrkNetworkMXL3FwRule {
               $rule.destPort -eq $destPort -and `
               $rule.destCidr -eq $destCidr) -or `
               ($rule.comment -eq $comment))){
-                  write-verbose "Not adding this rule as it is already present: $comment";
-                  $rulePresent = $true;
+                  "Not adding this rule as it is already present: $comment";
+                  $rulePresent = $true
               }
-
-        #add this exising rule to the $applyRules object
+          
+        #add this exising rule to the $ruleset object
         $ruleEntry = New-Object -TypeName PSObject -Property @{
             comment  = $rule.comment
             policy   = $rule.policy
@@ -186,26 +143,17 @@ function Update-MrkNetworkMXL3FwRule {
         }
 
         $applyRules += $ruleEntry
-        $objectModified = $true;
     };
-
-    #the resulting $applyRules must be stored in the $global:MXL3RuleSetState
-    $global:MXL3RuleSetState = $applyRules
 
     #construct the full ruleObject to push into the $body of the RESTapi request
     $ruleObject = New-Object -TypeName PSObject -Property @{
-        rules = $global:MXL3RuleSetState
+        rules = $applyRules
     }
 
-    Write-Verbose ($ruleObject | ConvertTo-Json -Depth 10)
-    if (-not $commit){Write-Verbose "to apply the ruleset use the -commit switch"}
-    
-    #if the rules have changed and you want to commit, or you want to commit a (saved) configuration apply the change now.
-    if( ($true -eq $objectModified -and $commit) -or $commit){
+    if($true -ne $rulePresent){
 
         $request = Invoke-MrkRestMethod -Method PUT -ResourceID ('/networks/' + $networkId + '/l3FirewallRules') -body $ruleObject
         return $request
 
     }
-
 }

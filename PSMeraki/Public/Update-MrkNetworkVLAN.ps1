@@ -130,7 +130,7 @@ function Update-MrkNetworkVLAN {
 
                     if($dhcpOptions.Length -ne 0){
                         forEach($option in $dhcpOptions){
-                            $optionProps = $option.split(",")
+                            $optionProps = $option.split(";")
                             #check if the current status of dhcpOptionsColl already contains the provided option-code as they can only contain 1 of each
                             if ($dhcpOptionsColl.code -notcontains $optionProps[0] ){
                                 $dhcpOptionsColl += New-Object -TypeName PSObject -Property @{
@@ -138,6 +138,8 @@ function Update-MrkNetworkVLAN {
                                     type = $optionProps[1]
                                     value = $optionProps[2]
                                 }
+                            }else{
+                                $dhcpOptionsColl[$dhcpOptionsColl.code.indexof($optionProps[0])].value = $optionProps[2]
                             }
                         }
                     }
@@ -175,7 +177,7 @@ function Update-MrkNetworkVLAN {
                     }
                     $mrkConfig.$key = $dhcpBootOptionsEnabled
                 }
-                {$_ -in "reset"} {
+                {$key -in "reset"} {
                     #in case a powershell parameter is just to control a value (e.g -reset) add is not a parameter that exists in
                     #the mrkConfig add it here in the -in "reset","another1","another2"
                 }
