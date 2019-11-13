@@ -90,7 +90,7 @@ function Set-MrkNetworkSSID {
         [Parameter(Mandatory)][ValidateSet("open","psk","open-with-radius","8021x-meraki","8021x-radius")][String]$authMode,
         [Parameter()][String]$psk,
         [Parameter()][ValidateSet('wpa','wep')][String]$encryptionMode,
-        [Parameter(Mandatory)][ValidateSet('WPA1 and WPA2','WPA2 only')][String]$wpaEncryptionMode,
+        [Parameter()][ValidateSet('WPA1 and WPA2','WPA2 only')][String]$wpaEncryptionMode,
         [Parameter(Mandatory)][ValidateSet('NAT mode','Bridge mode','Layer 3 roaming','Layer 3 roaming with a concentrator','VPN')][String]$ipAssignmentMode,
         [Parameter()][ValidateSet('1','2','5.5','6','9','11','12','18','24','36','48','54')][int]$minBitrate,
         [Parameter()][bool]$useVlanTagging,
