@@ -1,4 +1,4 @@
-﻿function set-MrkSwitchPort {
+﻿function Set-MrkSwitchPort {
     <#
     .SYNOPSIS
     Sets the properties of a Switchport

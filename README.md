@@ -63,3 +63,61 @@ In your profile, scroll down to 'API access'
 Generate a new rest api key, its a 40 byte key.
 Either remember it or store it in a safe location, this code represents your logged in Meraki dashboard user.
 This is the 'rest api key' the module asks for.
+
+## cmdlets
+
+This module includes the following cmdlets:
+
+```powershell
+Add-MrkNetworkStaticRoute
+Add-MrkNetworkVLAN
+Get-MrkCameraVideoLink
+Get-MrkDevice
+Get-MrkDeviceClient
+Get-MrkDeviceGroupPolicy
+Get-MrkDevicesStatus
+Get-MrkInventory
+Get-MrkLicenseState
+Get-MrkNetwork
+Get-MrkNetworkBluetoothClient
+Get-MrkNetworkDevice
+Get-MrkNetworkGroupPolicy
+Get-MrkNetworkMRL3FwRule
+Get-MrkNetworkMxCfRule
+Get-MrkNetworkMXL3FwRule
+Get-MrkNetworkMXL7FwRule
+Get-MrkNetworkRoute
+Get-MrkNetworkS2sVpn
+Get-MrkNetworkSiteToSiteVPN
+Get-MrkNetworkSSID
+Get-MrkNetworkStaticRoute
+Get-MrkNetworkVLAN
+Get-MrkOrgAdmins
+Get-MrkOrganization
+Get-MrkOrgEndpoint
+Get-MrkSAMLrole
+Get-MrkSwitch
+Get-MrkTemplate
+Get-MrkVPN
+New-MrkDevice
+New-MrkNetwork
+New-MrkOrgAdmin
+Remove-MrkDevice
+Remove-MrkNetwork
+Remove-MrkNetworkVLAN
+Remove-MrkOrgAdmin
+Set-MrkDevice
+Set-MrkNetworkS2sVpn
+Set-MrkNetworkSSID
+Set-MrkNetworkToTemplate
+Set-MrkRestApiKey
+Set-MrkSwitchPort
+Test-MrkRestApiKey
+Update-MrkDevice
+Update-MrkNetwork
+Update-MrkNetworkMRL3FwRule
+Update-MrkNetworkMXL3FwRule
+Update-MrkNetworkMXL7FwRule
+Update-MrkNetworkVLAN
+Update-MrkOrgAdmin
+```
