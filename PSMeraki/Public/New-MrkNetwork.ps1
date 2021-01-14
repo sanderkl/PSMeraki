@@ -1,9 +1,8 @@
 function New-MrkNetwork {
     <#
     .SYNOPSIS
-    Creates a new network in Merkai Org 
+    Creates a new network in a Meraki org 
     .DESCRIPTION
-    blah 
     .EXAMPLE
     New-MrkNetwork -Name Loc321 -Type wireless -Tags adsl -TimeZone "Europe/Amsterdam" 
     .EXAMPLE

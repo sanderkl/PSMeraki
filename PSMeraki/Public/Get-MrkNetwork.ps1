@@ -1,9 +1,9 @@
 function Get-MrkNetwork {
     <#
     .SYNOPSIS
-    Retrieves all meraki networks for an organization or a single network if the networkId is provided
+    Retrieves all meraki networks
     .DESCRIPTION
-    Describe the function in more detail
+    Retrieves all meraki networks for an organization or a single network if the networkId is provided
     .EXAMPLE
     Get-MrkNetwork 
     .EXAMPLE

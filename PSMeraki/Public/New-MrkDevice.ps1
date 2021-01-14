@@ -1,9 +1,9 @@
 function New-MrkDevice {
     <#
     .SYNOPSIS
-    Adds (claims) a new device, adds it to a network
+    Adds (claims) a new device
     .DESCRIPTION
-    blah 
+    Adds (claims) a new device and assigns it to a network
     .EXAMPLE
     New-MrkDevice -Networkid X_111122223639801111 -Serial Q2XX-XXXX-XXXX
     .PARAMETER networkId 

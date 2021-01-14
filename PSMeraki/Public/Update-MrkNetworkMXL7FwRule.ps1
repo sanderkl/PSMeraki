@@ -33,7 +33,7 @@ function Update-MrkNetworkMXL7FwRule{
     Param (
         [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$networkId,
         [ValidateSet("deny")][String]$policy="deny",
-        [Parameter(Mandatory)][ValidateNotNullOrEmpty()][ValidateSet("application", "applicationCategory","host","port","ipRange")][String]$type,
+        [Parameter(Mandatory)][ValidateNotNullOrEmpty()][ValidateSet("application", "applicationCategory","host","port","ipRange", "whitelistedCountries", "blacklistedCountries")][String]$type,
         [Parameter(Mandatory)][ValidateNotNullOrEmpty()]$value,
         [Parameter(Mandatory)][ValidateNotNullOrEmpty()][ValidateSet("add", "remove")][String]$action,
         [Parameter()][switch]$reset
@@ -58,7 +58,7 @@ function Update-MrkNetworkMXL7FwRule{
         if ($action -eq 'remove' -and `
            ($rule.policy -eq $policy -and `
             $rule.type -eq $type -and `
-            $rule.value -match $PSoValue)){
+            [string]$PSoValue -match $rule.value)){
                 "No longer adding this rule: $value";
                 continue
             }
@@ -99,28 +99,8 @@ function Update-MrkNetworkMXL7FwRule{
     }
 
     if($true -ne $rulePresent){
-
         $request = Invoke-MrkRestMethod -Method PUT -ResourceID ('/networks/' + $networkId + '/l7FirewallRules') -body $ruleObject
         return $request
-
-        # construct the uri of the MR device in the current organization
-        # $uri = "$(Get-MrkOrgEndpoint)/networks/$networkId/l7FirewallRules"    
-        # try {
-        #     $request = Invoke-RestMethod -Method Put `
-        #     -ContentType 'application/json' `
-        #     -Headers (Get-MrkRestApiHeader) `
-        #     -Uri $uri `
-        #     -Body ($ruleObject | ConvertTo-Json -Depth 4) -Verbose -ErrorAction Stop
-
-        #     Write-Host "succesfully updated firewall rules" -ForegroundColor Green
-        # }
-        # catch
-        # {
-        #     $_.exception
-        # }
-
-        # Return ($request | ConvertTo-Json)
-
     }
 }
 
