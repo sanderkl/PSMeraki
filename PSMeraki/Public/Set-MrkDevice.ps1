@@ -20,6 +20,10 @@ function Set-MrkDevice {
     Optional parameter to specify the latitude value of the device
     .PARAMETER lng
     Optional parameter to specify the longitude value of the device
+	.PARAMETER notes
+	Optional parameter to specify notes on the device, max 255 char
+	.PARAMETER movemapmarker
+	Optional parameter to set the move map marker flag if you use an address instead of a lat/lng. If True, will ignore lat/lng parameters
     #>
     [CmdletBinding()]
     Param (
@@ -29,7 +33,9 @@ function Set-MrkDevice {
         [Parameter()][string]$address,
         [Parameter()][String]$tag,
         [Parameter()][String]$lat,
-        [Parameter()][String]$lng
+        [Parameter()][String]$lng,
+        [Parameter()][String]$notes,
+        [Parameter()][Bool]$movemapmarker
     )
 
     #retrieve current settings from the device and populate $body 
@@ -41,6 +47,7 @@ function Set-MrkDevice {
     if ("" -eq $tag){$tag = $deviceProps.tags};
     if ("" -eq $lat){$lat = $deviceProps.lat};
     if ("" -eq $lng){$lng = $deviceProps.lng};
+    if ("" -eq $notes){$notes = $deviceProps.notes};
 
     $body = @{
         "name"=$devicename
@@ -48,8 +55,11 @@ function Set-MrkDevice {
         "lat"=$lat
         "lng"=$lng
         "address"=$address
-        "moveMapMarker"=$MoveMapMarker
+        "moveMapMarker" = $movemapmarker
+        "notes" = $notes
     }
+
+    if ($movemapmarker) {$body.Remove('lat');$body.Remove('lng')}
 
     convertto-json ($body)
 
