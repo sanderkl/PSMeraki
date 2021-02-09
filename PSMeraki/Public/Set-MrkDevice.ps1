@@ -35,7 +35,7 @@ function Set-MrkDevice {
         [Parameter()][String]$lat,
         [Parameter()][String]$lng,
         [Parameter()][String]$notes,
-        [Parameter()][Bool]$movemapmarker
+        [Parameter()][Switch]$movemapmarker
     )
 
     #retrieve current settings from the device and populate $body 
