@@ -19,7 +19,7 @@ function Set-MrkRestApiKey {
         [ValidatePattern("[0-9A-F]+")]
         [String]$key
     )
-    
+
     $script:mrkRestApiKey = $key
     Get-MrkOrgEndpoint
 }

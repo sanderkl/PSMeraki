@@ -25,7 +25,6 @@ function Update-MrkNetwork {
     #>
     [CmdletBinding()]
     Param (
-        [Parameter()][String]$orgId = (Get-MrkFirstOrgID),
         [Parameter(Mandatory)][String]$networkId,
         [Parameter(ParameterSetName="vlanstate")][bool]$enableVlanState,
         [Parameter(ParameterSetName="identity")][String]$name,

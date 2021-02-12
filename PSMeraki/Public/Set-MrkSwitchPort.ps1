@@ -99,7 +99,7 @@
     }
     else{
 
-        Write-Host "Switch doesn't exist." -ForegroundColor Red
+        Write-Error -Message "Switch doesn't exist."
 
     }
 
