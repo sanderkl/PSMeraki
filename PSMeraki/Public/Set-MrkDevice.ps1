@@ -3,12 +3,12 @@ function Set-MrkDevice {
     .SYNOPSIS
     Sets the properties of the device
     .DESCRIPTION
-    blah 
+    blah
     .EXAMPLE
-    Set-MrkDevice -networkId X_111122223639801111 -Serial Q2XX-XXXX-XXXX -devicename my-device -tag thistag -lat 52.12 -lng 41.21 
-    .PARAMETER networkId 
+    Set-MrkDevice -networkId X_111122223639801111 -Serial Q2XX-XXXX-XXXX -devicename my-device -tag thistag -lat 52.12 -lng 41.21
+    .PARAMETER networkId
     id of a network get one using: (Get-MrkNetwork).id
-    .PARAMETER serial 
+    .PARAMETER serial
     Serial number of the physical device that is added to the network.
     .PARAMETER devicename
     Optional parameter to specify the name of the device
@@ -38,7 +38,7 @@ function Set-MrkDevice {
         [Parameter()][Switch]$movemapmarker
     )
 
-    #retrieve current settings from the device and populate $body 
+    #retrieve current settings from the device and populate $body
     $deviceProps = Get-MrkDevice -networkID $networkId -Serial $serial;
     Write-Host current settings:
     $deviceProps
@@ -63,6 +63,6 @@ function Set-MrkDevice {
 
     convertto-json ($body)
 
-    $request = Invoke-MrkRestMethod -Method PUT -ResourceID ('/networks/' + $networkId + '/devices/' + $serial) -Body $body  
+    $request = Invoke-MrkRestMethod -Method PUT -ResourceID ('/networks/' + $networkId + '/devices/' + $serial) -Body $body
     return $request
 }

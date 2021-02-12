@@ -6,16 +6,16 @@ function Update-MrkNetworkVLAN {
     Adds a VLAN to a Meraki network, identifying the network with the Network ID, to find an id use get-MrkNetwork
     .EXAMPLE
     Update-MrkNetworkVLAN -Networkid X_111122223639801111 -id 500 -Name DATA -subnet 10.11.12.0 -applianceIP 10.11.12.254
-    .PARAMETER networkId 
+    .PARAMETER networkId
     id of a network (get-MrkNetworks).id[0]
     .PARAMETER id
     VLAN id, a number between 1 and 4094
     .PARAMETER name
     The Name of the new VLAN
     .PARAMETER subnet
-    The subnet of the VLAN 
+    The subnet of the VLAN
     .PARAMETER applianceIP
-    The local IP of the appliance on the VLAN 
+    The local IP of the appliance on the VLAN
     .PARAMETER dnsNameservers
     Multivalue string (array). valid dnsNameservers values are:
         "upstream_dns"
@@ -28,9 +28,9 @@ function Update-MrkNetworkVLAN {
     "start-ip1,end-ip1,description1","start-ip2,end-ip2,description2",etc
     .PARAMETER dhcpHandling
     parameter to set dhcp service on or off. By default the meraki MX servers as a dhcp server for each VLAN.
-    the setting can be "Do not respond to DHCP requests", "Run a DHCP server", or a 
+    the setting can be "Do not respond to DHCP requests", "Run a DHCP server", or a
     .Notes
-    
+
     #>
     [CmdletBinding()]
     Param (
@@ -67,6 +67,6 @@ function Update-MrkNetworkVLAN {
         "reservedIpRanges" = $reservedIpRanges
         "dhcpHandling" = $dhcpHandling
     }
-    $request = Invoke-MrkRestMethod -Method Put -ResourceID ('/networks/' + $Networkid + '/vlans/' + $Id) -Body $body  
+    $request = Invoke-MrkRestMethod -Method Put -ResourceID ('/networks/' + $Networkid + '/vlans/' + $Id) -Body $body
     return $request
 }

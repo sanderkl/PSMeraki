@@ -3,7 +3,7 @@ function Get-MrkSAMLrole {
     .SYNOPSIS
     Retrieves all SAML roles for a Meraki Organization
     .DESCRIPTION
-    Gets a list of all SAML roles for a Meraki organization. 
+    Gets a list of all SAML roles for a Meraki organization.
     .EXAMPLE
     Get-MrkSAMLrole
     .EXAMPLE

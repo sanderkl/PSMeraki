@@ -3,10 +3,10 @@ function Remove-MrkNetworkTemplate {
     .SYNOPSIS
     Unbinds a device from a template
     .DESCRIPTION
-    blah 
+    blah
     .EXAMPLE
     Remove-MrkNetworkTemplate -networkId X_111122223639801111
-    .PARAMETER networkId 
+    .PARAMETER networkId
     id of a network (get-MrkNetworks)[0].id
     #>
     [CmdletBinding()]

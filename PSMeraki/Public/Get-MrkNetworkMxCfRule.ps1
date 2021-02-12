@@ -5,7 +5,7 @@ Function Get-MrkNetworkMxCfRule{
     For MX series the ContentFiltering rules are retrieved per NetworkID.
         {{baseUrl}}/networks/{{networkId}}/contentFiltering
     .DESCRIPTION
-    Gets a list of all Meraki L3 ContentFiltering rules for a given Meraki network. 
+    Gets a list of all Meraki L3 ContentFiltering rules for a given Meraki network.
     .EXAMPLE
     Get-MrkNetworkMxCfRule -networkId X_112233445566778899
     .PARAMETER networkId

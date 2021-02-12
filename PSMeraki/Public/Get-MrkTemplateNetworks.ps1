@@ -5,7 +5,7 @@ function Get-MrkTemplateNetworks {
     .DESCRIPTION
     Retrieves all meraki networks for an organization bound to a template or a single template if the templateId is provided
     .EXAMPLE
-    Get-MrkTemplateNetworks 
+    Get-MrkTemplateNetworks
     .EXAMPLE
     Get-MrkTemplateNetworks -OrgId 111222
     .EXAMPLE
@@ -13,7 +13,7 @@ function Get-MrkTemplateNetworks {
     .PARAMETER orgId
     optional parameter specify an OrgId, default it will take the first OrgId retrieved from Get-MrkOrganizations
     .PARAMETER TemplateId
-    optional parameter to specify a specific configTemplateID. retrieve a specific set of networks bound to a template, use get-mrkTemplate 
+    optional parameter to specify a specific configTemplateID. retrieve a specific set of networks bound to a template, use get-mrkTemplate
     and then use the retrieved id to get networks from that specific template
     #>
     [CmdletBinding()]

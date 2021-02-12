@@ -2,7 +2,7 @@ function Get-MrkRestApiHeader {
     [CmdletBinding()]
     Param ()
     if (!$mrkRestApiKey){
-        Set-MrkRestApiKey 
+        Set-MrkRestApiKey
         Get-MrkRestApiHeader
     } Else {
        $global:mrkRestApiHeader = @{

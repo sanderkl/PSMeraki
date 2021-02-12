@@ -3,7 +3,7 @@ function Get-MrkNetworkRoute {
     .SYNOPSIS
     Retrieves all Meraki Network Routes on a Meraki network
     .DESCRIPTION
-    Gets a list of all Meraki Network Routes on a Meraki network. 
+    Gets a list of all Meraki Network Routes on a Meraki network.
     .EXAMPLE
     Get-MrkNetworkRoute -networkId X_112233445566778899
     .PARAMETER networkId

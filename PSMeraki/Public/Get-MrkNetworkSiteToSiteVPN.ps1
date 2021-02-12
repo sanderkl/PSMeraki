@@ -3,7 +3,7 @@ function Get-MrkNetworkSiteToSiteVPN {
     .SYNOPSIS
     Retrieves all Meraki Network SiteToSiteVPNs on a Meraki network
     .DESCRIPTION
-    Gets a list of all Meraki Network SiteToSiteVPNs on a Meraki network. 
+    Gets a list of all Meraki Network SiteToSiteVPNs on a Meraki network.
     .EXAMPLE
     Get-MrkNetworkSiteToSiteVPN -networkId X_112233445566778899
     .PARAMETER networkId

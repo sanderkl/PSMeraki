@@ -4,7 +4,7 @@ function Get-MrkOrgAdmins {
     Retrieves all meraki admins for an organization
     .DESCRIPTION
     .EXAMPLE
-    Get-MrkOrgAdmins 
+    Get-MrkOrgAdmins
     .EXAMPLE
     Get-MrkOrgAdmins -OrgId 111222
     .PARAMETER orgId

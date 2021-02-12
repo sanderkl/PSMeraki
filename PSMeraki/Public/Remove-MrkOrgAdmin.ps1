@@ -1,13 +1,13 @@
 function Remove-MrkOrgAdmin {
     <#
     .SYNOPSIS
-    Deletes a dashboard Admin 
+    Deletes a dashboard Admin
     .DESCRIPTION
     .EXAMPLE
     Remove-MrkOrgAdmin -adminId 6811694436398
-    .PARAMETER orgId 
+    .PARAMETER orgId
     defaults to Get-MrkFirstOrgID, for admins who maintain multiple organizations, OrgID can be specified
-    .PARAMETER adminId 
+    .PARAMETER adminId
     Admin id, to find it use get-mrkorgadmin
     #>
     [CmdletBinding()]

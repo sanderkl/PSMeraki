@@ -6,16 +6,16 @@ function Add-MrkNetworkVLAN {
     Adds a VLAN to a Meraki network, identifying the network with the networkId, to find an id use get-MrkNetwork
     .EXAMPLE
     Add-MrkNetworkVLAN -networkId X_111122223639801111 -id 500 -Name DATA -subnet 10.11.12.0 -applianceIP 10.11.12.254
-    .PARAMETER Networkid 
+    .PARAMETER Networkid
     id of a network (get-MrkNetworks)[0].id
     .PARAMETER id
     VLAN id, a number between 1 and 4094
     .PARAMETER Name
     The Name of the new VLAN
     .PARAMETER subnet
-    The subnet of the VLAN 
+    The subnet of the VLAN
     .PARAMETER applianceIP
-    The local IP of the appliance on the VLAN 
+    The local IP of the appliance on the VLAN
     .PARAMETER dnsNameservers
     valid dnsNameservers values are:
         "upstream_dns"
@@ -28,7 +28,7 @@ function Add-MrkNetworkVLAN {
      "start-ip1,end-ip1,description1","start-ip2,end-ip2,description2",etc
     .PARAMETER dhcpHandling
     parameter to set dhcp service on or off. By default the meraki MX servers as a dhcp server for each VLAN.
-    the setting can be "Do not respond to DHCP requests", "Run a DHCP server", or a 
+    the setting can be "Do not respond to DHCP requests", "Run a DHCP server", or a
     #>
     [CmdletBinding()]
     Param (
@@ -43,7 +43,7 @@ function Add-MrkNetworkVLAN {
         [string]$dhcpHandling
     )
 
-    #$config = Get-MrkNetworkVLAN -networkId $networkId -id 
+    #$config = Get-MrkNetworkVLAN -networkId $networkId -id
     #reservedIpRanges string property (IP Reservation(s), comma separated) must be converted into hashtable type to pass it on to the REST API
     if($null -ne $reservedIpRanges){
         $tmpCol = @()
@@ -72,7 +72,7 @@ function Add-MrkNetworkVLAN {
 
     #during POST (create new) VLAN the API doesn't handle the setting for DHCP mode other than 'Run a DHCP server'. By default the DHCP mode is enabled. In case the DHCP must be off,
     # the Update-MrkNetworkVLAN function is called to update the Network VLAN DHCP setting using the same variables for the POST action.
-    #additionally the REST API ignores the $dnsNameservers value and always sets "upstream_dns" which is also corrected during the update call 
+    #additionally the REST API ignores the $dnsNameservers value and always sets "upstream_dns" which is also corrected during the update call
     If ($dhcpHandling -eq "Do not respond to DHCP requests" -or $dnsNameservers -ne "upstream_dns"){
         $request = Update-MrkNetworkVLAN -networkId $networkId -id $id -name $name -subnet $subnet -applianceIp $applianceIp -dhcpHandling $dhcpHandling -dnsNameservers $dnsNameservers -reservedIpRanges $reservedIpRanges
         return $request

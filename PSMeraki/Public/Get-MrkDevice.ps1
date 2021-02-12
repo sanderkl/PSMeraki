@@ -1,9 +1,9 @@
 function Get-MrkDevice {
     <#
     .SYNOPSIS
-    Retrieves the details of a Meraki device 
+    Retrieves the details of a Meraki device
     .DESCRIPTION
-    Retrieves the details of a Meraki device 
+    Retrieves the details of a Meraki device
     .EXAMPLE
     Get-MrkDevice -networkId X_112233445566778899 -Serial Q2PN-AB12-V3X6
     .PARAMETER networkId

@@ -6,7 +6,7 @@ function Update-MrkNetwork {
     Meraki networks are identified by name, timezone and tags. Additionally the network itself holds the vlansEnabledState setting. To add vlans
     to a network this setting must be set first.
     .EXAMPLE
-    this will set the 
+    this will set the
     Update-MrkNetwork -networkId N_1234567890123456 -EnableVlanState
     Update-MrkNetwork -networkId N_1234567890123456 -name 'Office LA' -timeZone 'America/Los_Angeles' -tags "USA LA"
     .PARAMETER orgId
@@ -39,7 +39,7 @@ function Update-MrkNetwork {
         }
         #{{baseUrl}}/networks/{{networkId}}
         $request = Invoke-MrkRestMethod -Method PUT -ResourceID ('/networks/' + $networkId + '/vlansEnabledState') -Body $body;
-        #get the vlan enabled state for the network and add the return as noteproperty to the $request 
+        #get the vlan enabled state for the network and add the return as noteproperty to the $request
 
         return $request
     }
