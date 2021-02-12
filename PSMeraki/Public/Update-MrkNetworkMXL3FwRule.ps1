@@ -39,6 +39,7 @@ function Update-MrkNetworkMXL3FwRule {
         not specifying it or assigning $false will keep the existing rules (default).
     #>
     [CmdletBinding()]
+    [OutputType("System.String")]
     Param (
         [Parameter(Mandatory)]
         [ValidateNotNullOrEmpty()]

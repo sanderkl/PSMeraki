@@ -10,7 +10,7 @@ function Get-MrkOrgEndpoint {
     [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
     if (!$orgBaseUri){
         Write-Verbose "Get-MrkOrgEndpoint: global orgBaseUri is empty, retrieving organization specific meraki endpoint"
-        $orgURI = 'https://api.meraki.com/api/v0/organizations'
+        $orgURI = 'https://api.meraki.com/api/v1/organizations'
         $webRequest = Invoke-WebRequest -uri $orgURI -Method GET -Headers (Get-MrkRestApiHeader)
         $redirectedURL = $webRequest.BaseResponse.ResponseUri.AbsoluteUri
         $global:orgBaseUri = $redirectedURL.Replace('/organizations','')

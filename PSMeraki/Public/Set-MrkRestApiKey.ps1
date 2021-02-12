@@ -14,19 +14,12 @@ function Set-MrkRestApiKey {
     #>
     [CmdletBinding()]
     Param (
+        [parameter(Mandatory=$true, HelpMessage="Enter Meraki REST API key")]
+        [ValidateLength(40,40)]
+        [ValidatePattern("[0-9A-F]+")]
         [String]$key
     )
-    if (!$mrkRestApiKey){
-        $global:mrkRestApiKey = (Read-host Enter Meraki REST API key).Trim()
-        Write-Host Key set`, to change the key in this session`, use  Set-MrkRestApiKey `<key`>
-    }
-    if ($key){
-        $global:mrkRestApiKey = $key
-        Write-Host New Key set, invoking get-mrkOrgEndpoint
-        Get-MrkOrgEndpoint
-    }
-    if (!(Test-MrkRestApiKey -apiKey $mrkRestApiKey)){
-        Write-Host REST API Key is invalid
-        break
-    }
+    
+    $global:mrkRestApiKey = $key
+    Get-MrkOrgEndpoint
 }

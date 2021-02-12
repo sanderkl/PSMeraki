@@ -30,6 +30,7 @@ function Update-MrkNetworkMXL7FwRule{
     not specifying it or assigning $false will keep the existing rules (default).
     #>
     [CmdletBinding()]
+    [OutputType("System.String")]
     Param (
         [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$networkId,
         [ValidateSet("deny")][String]$policy="deny",

@@ -33,6 +33,7 @@
         parameter to set whether or not to allow LAN access (isolation). Default is $true
     #>
     [CmdletBinding()]
+    [OutputType("System.String")]
     Param (
         [Parameter(Mandatory)][ValidateNotNullOrEmpty()]
             [String]$networkId,

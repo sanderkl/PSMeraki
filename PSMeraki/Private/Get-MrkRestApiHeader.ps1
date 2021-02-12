@@ -1,5 +1,6 @@
 function Get-MrkRestApiHeader {
     [CmdletBinding()]
+    [OutputType("System.Collections.Hashtable")]
     Param ()
     if (!$mrkRestApiKey){
         Set-MrkRestApiKey
