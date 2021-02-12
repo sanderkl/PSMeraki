@@ -36,7 +36,7 @@ function Invoke-MrkRestMethod {
         } elseif ($_.exception.message -match [regex]::Escape('(308)')){
              Write-Verbose "Meraki reports redirection. Request the orgBaseUri and rerun the same request"
              Get-MrkOrgEndpoint # reset the $global:orgBaseUri variable to get the non-default api.meraki.com URI
-             $uri = $global:orgBaseUri + $ResourceID
+             $uri = $script:orgBaseUri + $ResourceID
              $request = Invoke-RestMethod -Method $Method -ContentType 'application/json' -Headers (Get-MrkRestApiHeader) -Uri $uri -Body ($body | ConvertTo-Json -Depth 10)
              # Invoke-MrkRestMethod -ResourceID $ResourceID -Method $method -body $body;
         } else {

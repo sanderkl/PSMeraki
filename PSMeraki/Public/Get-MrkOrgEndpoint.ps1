@@ -13,7 +13,7 @@ function Get-MrkOrgEndpoint {
         $orgURI = 'https://api.meraki.com/api/v1/organizations'
         $webRequest = Invoke-WebRequest -uri $orgURI -Method GET -Headers (Get-MrkRestApiHeader)
         $redirectedURL = $webRequest.BaseResponse.ResponseUri.AbsoluteUri
-        $global:orgBaseUri = $redirectedURL.Replace('/organizations','')
+        $script:orgBaseUri = $redirectedURL.Replace('/organizations','')
     }
     Write-Verbose "Get-MrkOrgEndpoint: Meraki RestApi organization URL: $orgBaseUri"
     Return $orgBaseUri

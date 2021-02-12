@@ -5,7 +5,7 @@ function New-MrkDeviceProvision {
     .DESCRIPTION
     Provisions a client with a name and policy. Clients can be provisioned before they associate to the network.
     .EXAMPLE
-    New-MrkDeviceProvision -networkId L_564638803281579210 -clientMac 0E:12:12:12:12:12 -clientName MyNewDevicaName
+    New-MrkDeviceProvision -networkId L_564638803281579210 -clientMac 0E:12:12:12:12:12 -clientName MyNewDeviceName
     .PARAMETER networkId
     networkId is the identitfier for a network and can be found using get-mrknetwork.
     .PARAMETER clientMac
@@ -22,12 +22,13 @@ function New-MrkDeviceProvision {
         [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$clientName,
         [Parameter()][String]$devicePolicy
     )
-    $body = @{
-        "clients" =@(
-            ([PSCustomObject]$clientbody =@{
+    [PSCustomObject]$clientbody =@{
             "mac" = $clientMac
             "name" = $clientName
-            })
+            }
+    $body = @{
+        "clients" =@(
+            $clientbody
         )
     "devicePolicy" = $devicePolicy
     }

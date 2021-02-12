@@ -20,6 +20,6 @@ function Set-MrkRestApiKey {
         [String]$key
     )
     
-    $global:mrkRestApiKey = $key
+    $script:mrkRestApiKey = $key
     Get-MrkOrgEndpoint
 }

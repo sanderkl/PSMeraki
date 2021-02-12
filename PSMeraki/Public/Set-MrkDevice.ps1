@@ -40,8 +40,6 @@ function Set-MrkDevice {
 
     #retrieve current settings from the device and populate $body
     $deviceProps = Get-MrkDevice -networkID $networkId -Serial $serial;
-    Write-Host current settings:
-    $deviceProps
     if ("" -eq $devicename){$devicename = $deviceProps.name};
     if ("" -eq $address){$address = $deviceProps.address};
     if ("" -eq $tag){$tag = $deviceProps.tags};
