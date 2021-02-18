@@ -53,11 +53,10 @@ function Set-MrkDevice {
         "lat"=$lat
         "lng"=$lng
         "address"=$address
-        "moveMapMarker" = $movemapmarker
         "notes" = $notes
     }
 
-    if ($movemapmarker) {$body.Remove('lat');$body.Remove('lng')}
+    if ($movemapmarker) {$body.Remove('lat');$body.Remove('lng');$body.Add("moveMapMarker",$true)}
 
     convertto-json ($body)
 
