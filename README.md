@@ -98,12 +98,14 @@ Get-MrkOrgEndpoint
 Get-MrkSAMLrole
 Get-MrkSwitch
 Get-MrkTemplate
+Get-MrkTemplateNetworks
 Get-MrkVPN
 New-MrkDevice
 New-MrkNetwork
 New-MrkOrgAdmin
 Remove-MrkDevice
 Remove-MrkNetwork
+Remove-MrkNetworkTemplate
 Remove-MrkNetworkVLAN
 Remove-MrkOrgAdmin
 Set-MrkDevice

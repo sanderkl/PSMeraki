@@ -3,7 +3,7 @@ function Get-MrkDevicesStatus {
     .SYNOPSIS
     Retrieves all VPNs for a Meraki Organization
     .DESCRIPTION
-    Gets a list of all VPNs for a Meraki organization. 
+    Gets a list of all VPNs for a Meraki organization.
     .EXAMPLE
     Get-MrkDevicesStatus
     .EXAMPLE

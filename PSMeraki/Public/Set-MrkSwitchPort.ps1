@@ -3,12 +3,12 @@
     .SYNOPSIS
     Sets the properties of a Switchport
     .DESCRIPTION
-    blah 
+    blah
     .EXAMPLE
-    set-MrkSwitchPort -switchname ($locationcode+"-MS120-SW1") -Port $i -enabled True -Portname DATA/VOICE -vlan 500 -voicevlan 600 -type access -POEenabled True 
-    .PARAMETER switchname 
+    set-MrkSwitchPort -switchname ($locationcode+"-MS120-SW1") -Port $i -enabled True -Portname DATA/VOICE -vlan 500 -voicevlan 600 -type access -POEenabled True
+    .PARAMETER switchname
     the name of the switch
-    .PARAMETER port 
+    .PARAMETER port
     the switch-portnumber to work on
     .PARAMETER portName
     the name to set on the port
@@ -29,7 +29,7 @@
      [CmdletBinding()]
 
     param (
-    
+
         [Parameter(Mandatory = $true)][String][ValidateNotNullOrEmpty()]$switchname,
         [Parameter(Mandatory = $true)][String][ValidateNotNullOrEmpty()]$port,
         [Parameter()][String][ValidateNotNullOrEmpty()]$portName="",
@@ -45,8 +45,8 @@
         #[Parameter(Mandatory = $false)][String][ValidateNotNullOrEmpty()]$AccessPolicyNumber,
         #[Parameter(Mandatory = $false)][String][ValidateNotNullOrEmpty()]$linkNegotiation
     )
-    
-   
+
+
 
     $enabledx=$false
     if ($enabled -eq "True") { $enabledx=$true} else { $enabledx=$false}
@@ -62,7 +62,7 @@
         #$api = @{
 
        #     "endpoint" = 'https://n35.meraki.com/api/v0'
-    
+
         #}
 
         $body = @{
@@ -84,10 +84,10 @@
         #$body = convertto-json ($body)
 
         #$header = @{
-        
+
         #    "X-Cisco-Meraki-API-Key" = $mrkapi
         #    "Content-Type" = 'application/json'
-        
+
        # }
 
         #$api.url = "/devices/" + $switch.serial + "/switchPorts/"+ $port
@@ -95,12 +95,12 @@
         #$request = (Invoke-RestMethod -Method PUT -Uri $uri -Headers $header -Body $body)
         $request = (Invoke-mrkRestMethod -Method PUT -ResourceID ('/devices/' + $switch.serial + '/switchPorts/' + $port) -Body $body)
         return $request
-    
+
     }
     else{
 
-        Write-Host "Switch doesn't exist." -ForegroundColor Red
-    
+        Write-Error -Message "Switch doesn't exist."
+
     }
 
 }

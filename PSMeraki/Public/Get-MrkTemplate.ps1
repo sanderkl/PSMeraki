@@ -3,9 +3,9 @@ function Get-MrkTemplate {
     .SYNOPSIS
     Retrieves all Meraki templates for an organization
     .DESCRIPTION
-    Gets a list of all Meraki templates configured in an organization. 
+    Gets a list of all Meraki templates configured in an organization.
     .EXAMPLE
-    Get-MrkTemplate 
+    Get-MrkTemplate
     .EXAMPLE
     Get-MrkTemplate -OrgId 111222
     .PARAMETER orgId

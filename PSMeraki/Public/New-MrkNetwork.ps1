@@ -1,15 +1,15 @@
 function New-MrkNetwork {
     <#
     .SYNOPSIS
-    Creates a new network in a Meraki org 
+    Creates a new network in a Meraki org
     .DESCRIPTION
     .EXAMPLE
-    New-MrkNetwork -Name Loc321 -Type wireless -Tags adsl -TimeZone "Europe/Amsterdam" 
+    New-MrkNetwork -Name Loc321 -Type wireless -Tags adsl -TimeZone "Europe/Amsterdam"
     .EXAMPLE
     New-MrkNetwork -Name Loc321 -Type wireless -Tags adsl -TimeZone "Europe/Amsterdam" -OrgId 111111
-    .PARAMETER name 
+    .PARAMETER name
     Name of the new network
-    .PARAMETER type 
+    .PARAMETER type
     Network type can be one of these: 'wireless','switch','appliance','phone'
     Once you create a network of type 'appliance' and at a later stage add/claim different device-types the network type dynamically changes to 'combined'
     .PARAMETER tags
@@ -33,6 +33,6 @@ function New-MrkNetwork {
         "tags" = $tags
         "timeZone" = $timeZone
     }
-    $request = Invoke-MrkRestMethod -Method POST -ResourceID ('/organizations/' + $orgId + '/networks') -Body $body  
+    $request = Invoke-MrkRestMethod -Method POST -ResourceID ('/organizations/' + $orgId + '/networks') -Body $body
     return $request
 }

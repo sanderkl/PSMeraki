@@ -9,12 +9,12 @@ function Invoke-MrkRestMethod {
         'The remote server returned an error: (429) Too Many Requests.' This is a MUI specific error with generic (429) returncode. that (429) is matched using REGEX to be language independent.
     .EXAMPLE
         Invoke-MrkRestMethod -Method GET -ResourceID ('/organizations/' + $OrgId + '/networks')
-    .PARAMETER ResourceID 
+    .PARAMETER ResourceID
         is the last part of the api uri describing the actual resource for the REST call,
     .PARAMETER Method
-        can be GET, POST, PUT or DELETE dpeends on the api function that is called. 
+        can be GET, POST, PUT or DELETE dpeends on the api function that is called.
     .PARAMETER body
-        some api functions require more input, this parameter expects an object that can convert to JSON. It can be a hashtable or PSCustomObject type. 
+        some api functions require more input, this parameter expects an object that can convert to JSON. It can be a hashtable or PSCustomObject type.
     #>
     [CmdletBinding()]
     Param (
@@ -36,7 +36,7 @@ function Invoke-MrkRestMethod {
         } elseif ($_.exception.message -match [regex]::Escape('(308)')){
              Write-Verbose "Meraki reports redirection. Request the orgBaseUri and rerun the same request"
              Get-MrkOrgEndpoint # reset the $global:orgBaseUri variable to get the non-default api.meraki.com URI
-             $uri = $global:orgBaseUri + $ResourceID
+             $uri = $script:orgBaseUri + $ResourceID
              $request = Invoke-RestMethod -Method $Method -ContentType 'application/json' -Headers (Get-MrkRestApiHeader) -Uri $uri -Body ($body | ConvertTo-Json -Depth 10)
              # Invoke-MrkRestMethod -ResourceID $ResourceID -Method $method -body $body;
         } else {

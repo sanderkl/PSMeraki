@@ -3,7 +3,7 @@ function Get-MrkNetworkVLAN {
     .SYNOPSIS
     Retrieves all Meraki Network VLANs on a Meraki network
     .DESCRIPTION
-    Gets a list of all Meraki Network VLANs on a Meraki network. 
+    Gets a list of all Meraki Network VLANs on a Meraki network.
     .EXAMPLE
     Get-MrkNetworkVLAN -networkId X_112233445566778899
     .PARAMETER networkId
@@ -22,6 +22,6 @@ function Get-MrkNetworkVLAN {
     }else{
         $request = Invoke-MrkRestMethod -Method GET -ResourceID ('/networks/' + $networkId + '/vlans/' + $id)
     }
-  
+
     return $request
 }

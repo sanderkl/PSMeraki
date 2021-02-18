@@ -14,7 +14,7 @@ function Get-MrkSwitch {
         /networks/[networkId]/switch/settings
 
     .DESCRIPTION
-    Gets a list of all Meraki switches in a Meraki network. 
+    Gets a list of all Meraki switches in a Meraki network.
     .EXAMPLE
     Get-MrkSwitch
     .EXAMPLE
@@ -31,14 +31,12 @@ function Get-MrkSwitch {
     )
     switch ($PsCmdlet.ParameterSetName) {
         "network" {
-            Write-Host processing network parameterset -ForegroundColor Green
             $request = Invoke-MrkRestMethod -Method GET -ResourceID ('/networks/' + $networkId + '/switch/settings')
         }
         "serial" {
-            Write-Host processing serial parameterset -ForegroundColor Green
             $request = Invoke-MrkRestMethod -Method GET -ResourceID ('/devices/' + $serial + '/switchPorts')
         }
     }
-    
+
     return $request
 }

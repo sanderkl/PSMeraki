@@ -3,12 +3,12 @@ function Update-MrkNetworkMXL7FwRule{
     .SYNOPSIS
     Adds a Meraki L7 Firewall rule to the given Meraki network.
     .DESCRIPTION
-    Adds a Meraki L7 Firewall rule to the given Meraki network. 
+    Adds a Meraki L7 Firewall rule to the given Meraki network.
     For MX series the firewall rules are set per NetworkID.
         PUT {{baseUrl}}/networks/{networkId}/l7FirewallRules
     .EXAMPLE
-    Update-MrkNetworkMXL7FwRule -networkId X_112233445566778899 -policy Deny -type applicationCategory -value 
-    Update-MrkNetworkMXL7FwRule -networkId X_112233445566778899 -policy Deny -type host -value malicious.domain.com 
+    Update-MrkNetworkMXL7FwRule -networkId X_112233445566778899 -policy Deny -type applicationCategory -value
+    Update-MrkNetworkMXL7FwRule -networkId X_112233445566778899 -policy Deny -type host -value malicious.domain.com
     .PARAMETER networkId
     specify a networkId, find an id using get-MrkNetworks
     .PARAMETER policy
@@ -30,6 +30,7 @@ function Update-MrkNetworkMXL7FwRule{
     not specifying it or assigning $false will keep the existing rules (default).
     #>
     [CmdletBinding()]
+    [OutputType("System.String")]
     Param (
         [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$networkId,
         [ValidateSet("deny")][String]$policy="deny",
@@ -54,7 +55,7 @@ function Update-MrkNetworkMXL7FwRule{
     $applyRules = @()
     ForEach ($rule in $ruleset){
 
-        #if the action is delete and the rule specifications policy/type/value are equal do not add it back to the ruleset. 
+        #if the action is delete and the rule specifications policy/type/value are equal do not add it back to the ruleset.
         if ($action -eq 'remove' -and `
            ($rule.policy -eq $policy -and `
             $rule.type -eq $type -and `
@@ -70,7 +71,7 @@ function Update-MrkNetworkMXL7FwRule{
                   "Not adding new rule as it is already present: $value";
                   $rulePresent = $true
               }
-          
+
         #add this exising rule into the $ruleset object
         $ruleEntry = [PSCustomObject]@{
             policy = $rule.policy

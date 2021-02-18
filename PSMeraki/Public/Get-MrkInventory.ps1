@@ -7,7 +7,7 @@ Function Get-MrkInventory{
     {{baseUrl}}/organizations/{{organizationId}}/inventory
     .EXAMPLE
     Get-MrkInventory -organizationId 12345
-    .PARAMETER orgId 
+    .PARAMETER orgId
     id of the organization. use Get-MrkFirstOrgID (or Get-MrkOrganization) to return the details of the organization your Api key has access to.
     #>
     [CmdletBinding()]
@@ -16,6 +16,6 @@ Function Get-MrkInventory{
     )
 
     $request = Invoke-MrkRestMethod -Method GET -ResourceID ('/organizations/' + $orgId + '/inventory')
-    
+
     return $request
 }

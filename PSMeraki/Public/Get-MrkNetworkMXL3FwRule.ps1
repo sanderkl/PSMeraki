@@ -3,7 +3,7 @@ function Get-MrkNetworkMXL3FwRule {
     .SYNOPSIS
     Retrieves Meraki L3 Firewall rules for a given Meraki network.
     .DESCRIPTION
-    Gets a list of all Meraki L3 Firewall rule for a given Meraki network. 
+    Gets a list of all Meraki L3 Firewall rule for a given Meraki network.
     For MX series the firewall rules are retrieved per networkId.
         {{baseUrl}}/networks/{{networkId}}/l3FirewallRules
     .EXAMPLE

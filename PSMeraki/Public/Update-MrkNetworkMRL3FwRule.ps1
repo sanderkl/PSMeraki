@@ -33,6 +33,7 @@
         parameter to set whether or not to allow LAN access (isolation). Default is $true
     #>
     [CmdletBinding()]
+    [OutputType("System.String")]
     Param (
         [Parameter(Mandatory)][ValidateNotNullOrEmpty()]
             [String]$networkId,
@@ -93,7 +94,7 @@
     };
     ForEach ($rule in $rules){
 
-        #if the action is delete and either the current rule comment matches the given comment, or the rule specifications protocol/destPort/destCidr are equal keep the entry in the ruleset. 
+        #if the action is delete and either the current rule comment matches the given comment, or the rule specifications protocol/destPort/destCidr are equal keep the entry in the ruleset.
         if ($action -eq 'remove' -and (($rule.protocol -eq $protocol -and $rule.destPort -eq $destPort -and $rule.destCidr -eq $destCidr) -or ($rule.comment -eq $comment)))
         {
             "No longer adding this rule: $comment";continue

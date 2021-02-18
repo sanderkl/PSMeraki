@@ -39,6 +39,7 @@ function Update-MrkNetworkMXL3FwRule {
         not specifying it or assigning $false will keep the existing rules (default).
     #>
     [CmdletBinding()]
+    [OutputType("System.String")]
     Param (
         [Parameter(Mandatory)]
         [ValidateNotNullOrEmpty()]
@@ -90,12 +91,12 @@ function Update-MrkNetworkMXL3FwRule {
         #the non-default rules are in the array above the default
         $ruleset = $ruleSource[0..$(($ruleSource.Count) -2)]
     }
-    
+
     #populate the to-be ruleset first with the existing rules (will be none in case of reset)
     $applyRules = @()
     ForEach ($rule in $ruleset){
 
-        #if the action is delete and either the current rule comment matches the given comment, or the rule specifications protocol/destPort/destCidr are equal keep the entry in the ruleset. 
+        #if the action is delete and either the current rule comment matches the given comment, or the rule specifications protocol/destPort/destCidr are equal keep the entry in the ruleset.
         if ($action -eq 'remove' -and `
           (($rule.protocol -eq $protocol -and `
             $rule.destPort -eq $destPort -and `
@@ -115,7 +116,7 @@ function Update-MrkNetworkMXL3FwRule {
                   "Not adding this rule as it is already present: $comment";
                   $rulePresent = $true
               }
-          
+
         #add this exising rule to the $ruleset object
         $ruleEntry = New-Object -TypeName PSObject -Property @{
             comment  = $rule.comment

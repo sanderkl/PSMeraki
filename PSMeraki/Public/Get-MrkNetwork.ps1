@@ -5,7 +5,7 @@ function Get-MrkNetwork {
     .DESCRIPTION
     Retrieves all meraki networks for an organization or a single network if the networkId is provided
     .EXAMPLE
-    Get-MrkNetwork 
+    Get-MrkNetwork
     .EXAMPLE
     Get-MrkNetwork -OrgId 111222
     .EXAMPLE
@@ -24,11 +24,11 @@ function Get-MrkNetwork {
     if($null -eq $networkId -or "" -eq $networkId){
         #{{baseUrl}}/organizations/{{organizationId}}/networks
         $request = Invoke-MrkRestMethod -Method GET -ResourceID ('/organizations/' + $orgId + '/networks')
-        
+
     } else {
         #{{baseUrl}}/networks/{{networkId}}
         $request = Invoke-MrkRestMethod -Method GET -ResourceID ('/networks/' + $networkId);
-        #get the vlan enabled state for the network and add the return as noteproperty to the $request 
+        #get the vlan enabled state for the network and add the return as noteproperty to the $request
         $vlansEnabledState = (Invoke-MrkRestMethod -Method GET -ResourceID ('/networks/' + $networkId + '/vlansEnabledState')).enabled;
         $request | Add-Member -MemberType NoteProperty -Name vlansEnabledState -Value $vlansEnabledState
     }

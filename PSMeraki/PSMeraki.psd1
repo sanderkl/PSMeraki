@@ -69,16 +69,16 @@ Description = 'PowerShell Module for Meraki Rest API'
 # NestedModules = @()
 
 # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
-FunctionsToExport = '*'
+FunctionsToExport = @('Add-MrkNetworkStaticRoute','Add-MrkNetworkVLAN','Get-MrkCameraVideoLink','Get-MrkDevice','Get-MrkDeviceClient','Get-MrkDeviceGroupPolicy','Get-MrkDevicesStatus','Get-MrkInventory','Get-MrkLicenseState','Get-MrkNetwork','Get-MrkNetworkBluetoothClient','Get-MrkNetworkDevice','Get-MrkNetworkGroupPolicy','Get-MrkNetworkMRL3FwRule','Get-MrkNetworkMxCfRule','Get-MrkNetworkMXL3FwRule','Get-MrkNetworkMXL7FwRule','Get-MrkNetworkRoute','Get-MrkNetworkS2sVpn','Get-MrkNetworkSiteToSiteVPN','Get-MrkNetworkSSID','Get-MrkNetworkStaticRoute','Get-MrkNetworkVLAN','Get-MrkOrgAdmins','Get-MrkOrganization','Get-MrkOrgEndpoint','Get-MrkSAMLrole','Get-MrkSwitch','Get-MrkTemplate','Get-MrkTemplateNetworks','Get-MrkVPN','New-MrkDevice','New-MrkDeviceProvision','New-MrkNetwork','New-MrkOrgAdmin','Remove-MrkDevice','Remove-MrkNetwork','Remove-MrkNetworkTemplate','Remove-MrkNetworkVLAN','Remove-MrkOrgAdmin','Set-MrkDevice','Set-MrkNetworkS2sVpn','Set-MrkNetworkSSID','Set-MrkNetworkToTemplate','Set-MrkRestApiKey','Set-MrkSwitchPort','Test-MrkRestApiKey','Update-MrkDevice','Update-MrkNetwork','Update-MrkNetworkMRL3FwRule','Update-MrkNetworkMXL3FwRule','Update-MrkNetworkMXL7FwRule','Update-MrkNetworkVLAN','Update-MrkOrgAdmin')
 
 # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
-CmdletsToExport = '*'
+CmdletsToExport = @('Add-MrkNetworkStaticRoute','Add-MrkNetworkVLAN','Get-MrkCameraVideoLink','Get-MrkDevice','Get-MrkDeviceClient','Get-MrkDeviceGroupPolicy','Get-MrkDevicesStatus','Get-MrkInventory','Get-MrkLicenseState','Get-MrkNetwork','Get-MrkNetworkBluetoothClient','Get-MrkNetworkDevice','Get-MrkNetworkGroupPolicy','Get-MrkNetworkMRL3FwRule','Get-MrkNetworkMxCfRule','Get-MrkNetworkMXL3FwRule','Get-MrkNetworkMXL7FwRule','Get-MrkNetworkRoute','Get-MrkNetworkS2sVpn','Get-MrkNetworkSiteToSiteVPN','Get-MrkNetworkSSID','Get-MrkNetworkStaticRoute','Get-MrkNetworkVLAN','Get-MrkOrgAdmins','Get-MrkOrganization','Get-MrkOrgEndpoint','Get-MrkSAMLrole','Get-MrkSwitch','Get-MrkTemplate','Get-MrkTemplateNetworks','Get-MrkVPN','New-MrkDevice','New-MrkDeviceProvision','New-MrkNetwork','New-MrkOrgAdmin','Remove-MrkDevice','Remove-MrkNetwork','Remove-MrkNetworkTemplate','Remove-MrkNetworkVLAN','Remove-MrkOrgAdmin','Set-MrkDevice','Set-MrkNetworkS2sVpn','Set-MrkNetworkSSID','Set-MrkNetworkToTemplate','Set-MrkRestApiKey','Set-MrkSwitchPort','Test-MrkRestApiKey','Update-MrkDevice','Update-MrkNetwork','Update-MrkNetworkMRL3FwRule','Update-MrkNetworkMXL3FwRule','Update-MrkNetworkMXL7FwRule','Update-MrkNetworkVLAN','Update-MrkOrgAdmin')
 
 # Variables to export from this module
-VariablesToExport = '*'
+VariablesToExport = @()
 
 # Aliases to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no aliases to export.
-AliasesToExport = '*'
+AliasesToExport = @()
 
 # DSC resources to export from this module
 # DscResourcesToExport = @()

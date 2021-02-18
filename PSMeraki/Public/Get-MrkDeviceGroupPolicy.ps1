@@ -4,7 +4,7 @@ function Get-MrkDeviceGroupPolicy {
     Return the group policy that is assigned to a device in the network
     .DESCRIPTION
     .EXAMPLE
-    Get-MrkDeviceGroupPolicy -networkId X_112233445566778899 -ClientMac <mac adress syntax unknown> 
+    Get-MrkDeviceGroupPolicy -networkId X_112233445566778899 -ClientMac <mac adress syntax unknown>
     .PARAMETER networkId
     specify a networkId, find an id using get-MrkNetworks
     .PARAMETER clientMac

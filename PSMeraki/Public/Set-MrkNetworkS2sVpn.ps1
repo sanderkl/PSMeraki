@@ -4,7 +4,7 @@ function Set-MrkNetworkS2sVpn{
     Sets the site2site VPN state and which localSubnet to include/exclude in the tunnel.
     .DESCRIPTION
     Sets the site2site VPN state and which localSubnet to include/exclude in the tunnel. The function can
-    enable or disable the site-to-site VPN status and set mode hub or spoke as well as set the remote HUB and 
+    enable or disable the site-to-site VPN status and set mode hub or spoke as well as set the remote HUB and
     set the local subnets that should be included in the tunnel or not.
     .EXAMPLE
     Set-MrkNetworkS2sVpn -networkId N_123412341241234 -vpnHubs L_123456789012345678 -mode spoke -useDefaultRoute $false -vpnSubnets "10.20.30.0/24,no","10.20.40.0/24,yes","10.20.50.0/24,yes"
@@ -51,7 +51,7 @@ function Set-MrkNetworkS2sVpn{
                 "mode" = $mode
             }
         }
-        
+
         Default {
 
             ForEach ($hubId in $vpnHubs){

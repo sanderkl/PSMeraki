@@ -4,7 +4,7 @@ function Set-MrkNetworkSSID {
     Sets propeerties on a given Meraki SSID number on a Meraki network
     PUT {orguri}/networks/{networkId}/ssids/{number}
     .DESCRIPTION
-    Gets a list of all Meraki SSIDs on a Meraki network. 
+    Gets a list of all Meraki SSIDs on a Meraki network.
     .EXAMPLE
     Set-MrkNetworkSSID -networkId X_112233445566778899 -number 1 -name "Company Network" -enabled $true -authMode psk -
     .PARAMETER networkId
@@ -24,9 +24,9 @@ function Set-MrkNetworkSSID {
     .PARAMETER wpaEncryptionMode
     ('WPA1 and WPA2', 'WPA2 only')
     .PARAMETER splashPage
-    The type of splash page for the SSID ('None', 'Click-through splash page', 'Billing', 
-    'Password-protected with Meraki RADIUS', 'Password-protected with custom RADIUS', 
-    'Password-protected with Active Directory', 'Password-protected with LDAP', 'SMS authentication', 
+    The type of splash page for the SSID ('None', 'Click-through splash page', 'Billing',
+    'Password-protected with Meraki RADIUS', 'Password-protected with custom RADIUS',
+    'Password-protected with Active Directory', 'Password-protected with LDAP', 'SMS authentication',
     'Systems Manager Sentry', 'Facebook Wi-Fi', 'Google OAuth' or 'Sponsored guest').
     This attribute is not supported for template children.
     .PARAMETER radiusServers
@@ -35,7 +35,7 @@ function Set-MrkNetworkSSID {
     port  : UDP port the RADIUS server listens on for Access-requests
     secret: RADIUS client shared secret
     .PARAMETER radiusCoaEnabled
-    If true, Meraki devices will act as a RADIUS Dynamic Authorization Server and will respond to RADIUS Change-of-Authorization and 
+    If true, Meraki devices will act as a RADIUS Dynamic Authorization Server and will respond to RADIUS Change-of-Authorization and
     Disconnect messages sent by the RADIUS server.
     .PARAMETER radiusFailoverPolicy
     This policy determines how authentication requests should be handled in the event that all of the configured RADIUS servers are unreachable
@@ -46,7 +46,7 @@ function Set-MrkNetworkSSID {
     .PARAMETER radiusAccountingEnabled
     Whether or not RADIUS accounting is enabled. This param is only valid if the authMode is 'open-with-radius' or '8021x-radius'
     .PARAMETER radiusAccountingServers
-    The RADIUS accounting 802.1x servers to be used for authentication. This param is only valid if the authMode is 'open-with-radius' or '8021x-radius' 
+    The RADIUS accounting 802.1x servers to be used for authentication. This param is only valid if the authMode is 'open-with-radius' or '8021x-radius'
     and radiusAccountingEnabled is 'true'
     host   : IP address to which the APs will send RADIUS accounting messages
     port   : Port on the RADIUS server that is listening for accounting messages
@@ -68,7 +68,7 @@ function Set-MrkNetworkSSID {
     .PARAMETER walledGardenEnabled
     Allow access to a configurable list of IP ranges, which users may access prior to sign-on.
     .PARAMETER walledGardenRanges
-    Specify your walled garden by entering space-separated addresses, ranges using CIDR notation, domain names, 
+    Specify your walled garden by entering space-separated addresses, ranges using CIDR notation, domain names,
     and domain wildcards (e.g. 192.168.1.1/24 192.168.37.10/32 www.yahoo.com *.google.com). Meraki's splash page is automatically included in your walled garden.
     .PARAMETER minBitrate
     The minimum bitrate in Mbps. ('1','2','5.5','6','9','11','12','18','24','36','48','54')
