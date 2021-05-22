@@ -18,13 +18,13 @@ function Invoke-MrkRestMethod {
     #>
     [CmdletBinding()]
     Param (
+        [Parameter(Mandatory)][ValidateSet('GET','POST','PUT','DELETE')][String]$Method,    
         [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$ResourceID,
-        [Parameter(Mandatory)][ValidateSet('GET','POST','PUT','DELETE')][String]$Method,
         [Parameter()]$body
     )
     $orgBaseUri = Get-MrkOrgEndpoint
     $uri = $orgBaseUri + $ResourceID
-    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+    #[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
     try {
         $request = Invoke-RestMethod -Method $Method -ContentType 'application/json' -Headers (Get-MrkRestApiHeader) -Uri $uri -Body ($body | ConvertTo-Json -Depth 10)
     } catch {

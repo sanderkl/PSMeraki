@@ -1,20 +1,18 @@
 [CmdletBinding()]
 Param ()
 #Get public and private function definition files.
-Write-Verbose "VOConfigVM Module: script root $PSScriptRoot"
+Write-Verbose "PSMeraki Module: script root $PSScriptRoot"
 $Public  = @( Get-ChildItem -Path $PSScriptRoot\Public\*.ps1 -Recurse)
 $Private = @( Get-ChildItem -Path $PSScriptRoot\Private\*.ps1 -Recurse)
 
 #Dot source the files
 Foreach($import in @($Public + $Private))
 {
-    Try
-    {
+    Try {
         . $import.fullname
-        Write-Verbose "VOConfigVM Module: Imported $import.fullname"
+        Write-Verbose "PSMeraki Module: Imported $import.fullname"
     }
-    Catch
-    {
+    Catch {
         Write-Error -Message "Failed to import function $($import.fullname): $_"
     }
 }

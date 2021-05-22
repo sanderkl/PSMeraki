@@ -5,6 +5,8 @@ function Get-MrkOrganization {
     .EXAMPLE
     Get-MrkOrganization
     #>
-    $request = Invoke-MrkRestMethod -Method GET -ResourceID '/organizations'
-    return $request
+    [CmdletBinding()]
+    Param ()
+    $response = Invoke-MrkRestMethod -Method GET -ResourceID '/organizations'
+    return $response
 }

@@ -19,7 +19,7 @@ function Set-MrkRestApiKey {
         [ValidatePattern("[0-9A-F]+")]
         [String]$key
     )
-
+    Write-Verbose "Set-MrkRestApiKey: Setting REST API key"
     $script:mrkRestApiKey = $key
-    Get-MrkOrgEndpoint
+    #Get-MrkOrgEndpoint | Out-Null
 }
