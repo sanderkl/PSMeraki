@@ -16,6 +16,9 @@ function Remove-MrkNetworkVLAN { # UNTESTED
         [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$networkId,
         [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$id
     )
-    $request = Invoke-MrkRestMethod -Method DELETE -ResourceID ('/networks/' + $networkId + '/vlans/' + $id)
-    return $request
+    if ($mrkApiVersion -eq 'v0'){
+        Invoke-MrkRestMethod -Method DELETE -ResourceID "/networks/$networkId/vlans/$id"
+    } Else { #mrkApiVersion v1
+        Invoke-MrkRestMethod -Method DELETE -ResourceID "/networks/$networkId/appliance/vlans/$id"
+    }    
 }

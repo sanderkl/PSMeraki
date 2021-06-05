@@ -1,6 +1,16 @@
 # PSMeraki
 
-This is a PowerShell module around the documented Meraki Rest API functions \([link](https://documenter.getpostman.com/view/897512/meraki-dashboard-api/2To9xm#a5b91474-d9da-c345-cf0e-5c828475686d)\). Only a limited number of meraki rest API functions have been implemented.
+This is a PowerShell module for Cisco Meraki REST API \([link](https://documenter.getpostman.com/view/897512/meraki-dashboard-api/2To9xm#a5b91474-d9da-c345-cf0e-5c828475686d)\). 
+Not all avaiable Meraki REST API functions are included in this module.
+
+New in v2.0 (JUNE 2021):
+
+- Module now uses v1 endpoint (Can be switched back using set-mrkRestApiVersion -version v0 for backward compatibility)
+- Inaddition to version Powershell 5.1 also tested on PowerShell and 7 under Windows and Linux. 
+- Fixed an issue where the module threw an error when a mrk cmdlet was used without a setting an apikey first. 
+- Removed a workaround for redirects sent by meraki which powershell was unable to handle.
+- Moved Invoke-MrkRestMethod to public cmdlets to allow more flexibility. When a resource is missing in the existing cmdlets this cmdlet can be used to call the missing resource.  
+- Added Restart-MrkDevice
 
 New in v1.1 (MAY 2019):
 
@@ -87,7 +97,6 @@ Get-MrkNetworkMxCfRule
 Get-MrkNetworkMXL3FwRule
 Get-MrkNetworkMXL7FwRule
 Get-MrkNetworkRoute
-Get-MrkNetworkS2sVpn
 Get-MrkNetworkSiteToSiteVPN
 Get-MrkNetworkSSID
 Get-MrkNetworkStaticRoute
@@ -95,11 +104,13 @@ Get-MrkNetworkVLAN
 Get-MrkOrgAdmins
 Get-MrkOrganization
 Get-MrkOrgEndpoint
+Get-MrkRestApiVersion
 Get-MrkSAMLrole
 Get-MrkSwitch
 Get-MrkTemplate
 Get-MrkTemplateNetworks
 Get-MrkVPN
+Invoke-MrkRestMethod
 New-MrkDevice
 New-MrkNetwork
 New-MrkOrgAdmin
@@ -108,13 +119,14 @@ Remove-MrkNetwork
 Remove-MrkNetworkTemplate
 Remove-MrkNetworkVLAN
 Remove-MrkOrgAdmin
+Restart-MrkDevice
 Set-MrkDevice
-Set-MrkNetworkS2sVpn
+Set-MrkNetworkSiteToSiteVPN
 Set-MrkNetworkSSID
 Set-MrkNetworkToTemplate
 Set-MrkRestApiKey
+Set-MrkRestApiVersion
 Set-MrkSwitchPort
-Test-MrkRestApiKey
 Update-MrkDevice
 Update-MrkNetwork
 Update-MrkNetworkMRL3FwRule

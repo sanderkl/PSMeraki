@@ -14,6 +14,5 @@ function Get-MrkOrgAdmins {
     Param (
         [Parameter()][String]$orgId = (Get-MrkFirstOrgID)
     )
-    $request = Invoke-MrkRestMethod -Method GET -ResourceID ('/organizations/' + $orgId + '/admins')
-    return $request
+    Invoke-MrkRestMethod -Method GET -ResourceID "/organizations/$orgId/admins"
 }

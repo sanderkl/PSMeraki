@@ -153,10 +153,12 @@ function Update-MrkNetworkMXL3FwRule {
     }
 
     if($true -ne $rulePresent){
-
-        $request = Invoke-MrkRestMethod -Method PUT -ResourceID ('/networks/' + $networkId + '/l3FirewallRules') -body $ruleObject
-        return $request
-
+        if ($mrkApiVersion -eq 'v0'){
+            $ResourceID = "/networks/$networkId/l3FirewallRules"
+        } Else { #mrkApiVersion v1
+            $ResourceID = "/networks/$networkId/appliance/firewall/l3FirewallRules"
+        }
+        Invoke-MrkRestMethod -Method PUT -ResourceID $ResourceID -body $ruleObject
         # #construct the uri of the MR device in the current organization
         # $uri = "$(Get-MrkOrgEndpoint)/networks/$networkId/l3FirewallRules"
         # try {
@@ -172,7 +174,5 @@ function Update-MrkNetworkMXL3FwRule {
         # {
         #     $_.exception
         # }
-
-        Return ($request | ConvertTo-Json)
     }
 }

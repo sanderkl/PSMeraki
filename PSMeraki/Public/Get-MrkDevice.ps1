@@ -13,13 +13,16 @@ function Get-MrkDevice {
     #>
     [CmdletBinding()]
     Param (
-        [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$networkId,
+        [Parameter()][ValidateNotNullOrEmpty()][String]$networkId,
         [Parameter()][Alias("serialNr")][String]$serial
     )
     if($serial -eq ""){
-        $request = Invoke-MrkRestMethod -Method GET -ResourceID ('/networks/' + $networkId + '/devices')
+        Invoke-MrkRestMethod -Method GET -ResourceID "/networks/$networkId/devices"
     } else {
-        $request = Invoke-MrkRestMethod -Method GET -ResourceID ('/networks/' + $networkId + '/devices/' + $serial)
+        if ($mrkApiVersion -eq 'v0'){
+            Invoke-MrkRestMethod -Method GET -ResourceID "/networks/$networkId/devices/$serial"
+        } Else { #mrkApiVersion v1
+            Invoke-MrkRestMethod -Method GET -ResourceID "/devices/$serial"
+        }        
     }
-    return $request
 }

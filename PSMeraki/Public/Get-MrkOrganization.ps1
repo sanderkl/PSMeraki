@@ -7,6 +7,6 @@ function Get-MrkOrganization {
     #>
     [CmdletBinding()]
     Param ()
-    $response = Invoke-MrkRestMethod -Method GET -ResourceID '/organizations'
-    return $response
+    Write-Verbose "Get-MrkOrganization: called"
+    Invoke-MrkRestMethod -Method GET -ResourceID "/organizations"
 }

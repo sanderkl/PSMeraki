@@ -9,11 +9,12 @@ function Get-MrkOrgEndpoint {
     #>
     [CmdletBinding()]
     Param ()
+    Write-Verbose "Get-MrkOrgEndpoint: called"
     [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
     if (!$mrkApiVersion){
         $global:mrkApiVersion = 'v1'
     }
-    Write-Verbose "Get-MrkOrgEndpoint: Meraki RestApi version: $mrkApiVersion"
+    Write-Verbose "Get-MrkOrgEndpoint: Meraki REST API version: $mrkApiVersion"
     #if (!$orgBaseUri){
         # Write-Verbose "Get-MrkOrgEndpoint: global orgBaseUri is empty, retrieving organization specific meraki endpoint"
         # $orgURI = "https://api.meraki.com/api/$mrkApiVersion/organizations"
@@ -22,6 +23,6 @@ function Get-MrkOrgEndpoint {
         # $script:orgBaseUri = $redirectedURL.Replace('/organizations','')
         $script:orgBaseUri = "https://api.meraki.com/api/$mrkApiVersion"
     #}
-    Write-Verbose "Get-MrkOrgEndpoint: Meraki RestApi organization URL: $orgBaseUri"
+    Write-Verbose "Get-MrkOrgEndpoint: Meraki REST API organization URL: $orgBaseUri"
     Return $orgBaseUri
 }

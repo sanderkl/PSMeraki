@@ -13,6 +13,5 @@ function Get-MrkDeviceClient {
     Param (
         [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$serial
     )
-    $request = Invoke-MrkRestMethod -Method GET -ResourceID ('/devices/' + $serial + '/clients?timespan=84000')
-    return $request
+    Invoke-MrkRestMethod -Method GET -ResourceID "/devices/$serial/clients?timespan=84000"
 }

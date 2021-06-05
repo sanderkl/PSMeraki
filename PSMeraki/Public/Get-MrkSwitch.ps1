@@ -31,12 +31,14 @@ function Get-MrkSwitch {
     )
     switch ($PsCmdlet.ParameterSetName) {
         "network" {
-            $request = Invoke-MrkRestMethod -Method GET -ResourceID ('/networks/' + $networkId + '/switch/settings')
+            Invoke-MrkRestMethod -Method GET -ResourceID "/networks/$networkId/switch/settings"
         }
         "serial" {
-            $request = Invoke-MrkRestMethod -Method GET -ResourceID ('/devices/' + $serial + '/switchPorts')
+            if ($mrkApiVersion -eq 'v0'){
+                Invoke-MrkRestMethod -Method GET -ResourceID "/devices/$serial/switchPorts"
+            } Else { #mrkApiVersion v1
+                Invoke-MrkRestMethod -Method GET -ResourceID "/devices/$serial/switch/ports"
+            }
         }
     }
-
-    return $request
 }

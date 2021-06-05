@@ -13,6 +13,5 @@ function Get-MrkNetworkDevice {
     Param (
         [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$networkId
     )
-    $request = Invoke-MrkRestMethod -Method GET -ResourceID ('/networks/' + $networkId + '/devices')
-    return $request
+    Invoke-MrkRestMethod -Method GET -ResourceID "/networks/$networkId/devices"
 }

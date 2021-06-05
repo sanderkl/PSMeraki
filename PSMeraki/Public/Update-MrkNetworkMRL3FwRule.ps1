@@ -108,9 +108,7 @@
             destPort = $rule.destPort
             destCidr = $rule.destCidr
         }
-
         $ruleset += $ruleEntry
-
     }
     #$ruleset
 
@@ -122,23 +120,10 @@
 
     #construct the uri of the MR device in the current organization
     #$uri = "$(Get-MrkOrgEndpoint)/networks/$networkID/ssids/$ssidID/l3FirewallRules"
-
-    $request = Invoke-MrkRestMethod -Method PUT -ResourceID ('/networks/' + $networkId + '/ssids/' + $ssidID + '/l3FirewallRules') -body $ruleObject
-    return $request
-
-    # try {
-    #     $request = Invoke-RestMethod -Method Put `
-    #     -ContentType 'application/json' `
-    #     -Headers (Get-MrkRestApiHeader) `
-    #     -Uri $uri `
-    #     -Body ($ruleObject | ConvertTo-Json) -Verbose -ErrorAction Stop
-
-    #     Write-Host "succesfully updated firewall rules" -ForegroundColor Green
-    # }
-    # catch
-    # {
-    #     $_.exception
-    # }
-
-    # Return ($request | ConvertTo-Json)
+    if ($mrkApiVersion -eq 'v0'){
+        $ResourceID = "/networks/$networkId/ssids/$ssidID/l3FirewallRules"
+    } Else { #mrkApiVersion v1
+        $ResourceID = "/networks/$networkId/wireless/ssids/$ssidID/firewall/l3FirewallRules"
+    }
+    Invoke-MrkRestMethod -Method PUT -ResourceID $ResourceID -body $ruleObject
 }

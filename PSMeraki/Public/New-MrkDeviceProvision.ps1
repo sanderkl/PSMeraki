@@ -32,6 +32,5 @@ function New-MrkDeviceProvision {
         )
     "devicePolicy" = $devicePolicy
     }
-    $request = Invoke-MrkRestMethod -Method POST -ResourceID ('/networks/' + $networkId + '/clients/provision') -Body $body
-    return $request
+    Invoke-MrkRestMethod -Method POST -ResourceID "/networks/$networkId/clients/provision" -Body $body
 }

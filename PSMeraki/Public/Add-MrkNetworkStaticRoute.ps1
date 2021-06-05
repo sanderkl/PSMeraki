@@ -42,10 +42,17 @@ Function Add-MrkNetworkStaticRoute{
             $srId = $sr.id
         }
     }
-    If($updateRoute){
-        $request = Invoke-MrkRestMethod -Method PUT -ResourceID ('/networks/' + $networkId + '/staticRoutes/' + $srId) -Body $body
-    }else{
-        $request = Invoke-MrkRestMethod -Method POST -ResourceID ('/networks/' + $networkId + '/staticRoutes') -Body $body
+    if ($mrkApiVersion -eq 'v0'){
+        If($updateRoute){
+            Invoke-MrkRestMethod -Method PUT -ResourceID "/networks/$networkId/staticRoutes/$srId" -Body $body
+        }else{
+            Invoke-MrkRestMethod -Method POST -ResourceID "/networks/$networkId/staticRoutes" -Body $body
+        }
+    } Else { #$mrkApiVersion v1
+        If($updateRoute){
+            Invoke-MrkRestMethod -Method PUT -ResourceID "/networks/$networkId/appliance/staticRoutes/$srId" -Body $body
+        }else{
+            Invoke-MrkRestMethod -Method POST -ResourceID "/networks/$networkId/appliance/staticRoutes" -Body $body
+        }
     }
-    return $request
 }

@@ -100,8 +100,12 @@ function Update-MrkNetworkMXL7FwRule{
     }
 
     if($true -ne $rulePresent){
-        $request = Invoke-MrkRestMethod -Method PUT -ResourceID ('/networks/' + $networkId + '/l7FirewallRules') -body $ruleObject
-        return $request
+        if ($mrkApiVersion -eq 'v0'){
+            $ResourceID = "/networks/$networkId/l7FirewallRules"
+        } Else { #mrkApiVersion v1
+            $ResourceID = "/networks/$networkId/appliance/firewall/l7FirewallRules"
+        }        
+        Invoke-MrkRestMethod -Method PUT -ResourceID $ResourceID -body $ruleObject
     }
 }
 

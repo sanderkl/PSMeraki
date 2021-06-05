@@ -19,7 +19,7 @@ function Update-MrkDevice {
     #>
     [CmdletBinding()]
     Param (
-        [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$networkId,
+        [Parameter()][ValidateNotNullOrEmpty()][String]$networkId,
         [Parameter(Mandatory)][ValidateNotNullOrEmpty()][Alias("serialNr")][String]$serial,
         [Parameter()][String]$NewName,
         [Parameter()][String]$NewTags,
@@ -30,6 +30,10 @@ function Update-MrkDevice {
         "tags"=$NewTags
         "address"=$NewAddress
     }
-    $request = Invoke-MrkRestMethod -Method PUT -ResourceID ('/networks/' + $networkId + '/devices/' + $serial) -Body $body
-    return $request
+    if ($mrkApiVersion -eq 'v0'){
+        $ResourceID = "/networks/$networkId/devices/$serial"
+    } Else { #mrkApiVersion v1
+        $ResourceID = "/devices/$serial"
+    }
+    Invoke-MrkRestMethod -Method PUT -ResourceID $ResourceID -Body $body
 }

@@ -67,6 +67,10 @@ function Update-MrkNetworkVLAN {
         "reservedIpRanges" = $reservedIpRanges
         "dhcpHandling" = $dhcpHandling
     }
-    $request = Invoke-MrkRestMethod -Method Put -ResourceID ('/networks/' + $Networkid + '/vlans/' + $Id) -Body $body
-    return $request
+    if ($mrkApiVersion -eq 'v0'){
+        $ResourceID = "/networks/$Networkid/vlans/$Id"
+    } Else { #mrkApiVersion v1
+        $ResourceID = "/networks/$Networkid/appliance/vlans/$Id"
+    }
+    Invoke-MrkRestMethod -Method Put -ResourceID  $ResourceID -Body $body
 }

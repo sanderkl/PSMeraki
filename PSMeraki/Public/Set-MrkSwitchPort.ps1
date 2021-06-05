@@ -25,10 +25,8 @@
     .PARAMETER voiceVlan
     parameter to define the VLAN id for voice
     #>
-
-     [CmdletBinding()]
-
-    param (
+    [CmdletBinding()]
+    Param (
 
         [Parameter(Mandatory = $true)][String][ValidateNotNullOrEmpty()]$switchname,
         [Parameter(Mandatory = $true)][String][ValidateNotNullOrEmpty()]$port,
@@ -46,25 +44,13 @@
         #[Parameter(Mandatory = $false)][String][ValidateNotNullOrEmpty()]$linkNegotiation
     )
 
-
-
     $enabledx=$false
     if ($enabled -eq "True") { $enabledx=$true} else { $enabledx=$false}
-
     $poeenabledx=$false
     if ($poeenabled -eq "True") { $poeenabledx=$true} else { $poeenabledx=$false}
 
-
     $switch = Get-MrkSwitch $network.id | Where-Object {$_.name -eq $switchname}
-
     if ($switch){
-
-        #$api = @{
-
-       #     "endpoint" = 'https://n35.meraki.com/api/v0'
-
-        #}
-
         $body = @{
             "name"=$Portname
             "enabled"=$enabledx
@@ -78,29 +64,15 @@
             #"stpGuard"=$stp
             #"accessPolicyNumber"=$accessPolicyNumber
             #"linkNegotiation"=$linkNegotiation
-            }
+        }
 
-
-        #$body = convertto-json ($body)
-
-        #$header = @{
-
-        #    "X-Cisco-Meraki-API-Key" = $mrkapi
-        #    "Content-Type" = 'application/json'
-
-       # }
-
-        #$api.url = "/devices/" + $switch.serial + "/switchPorts/"+ $port
-        #$uri = $api.endpoint + $api.url
-        #$request = (Invoke-RestMethod -Method PUT -Uri $uri -Headers $header -Body $body)
-        $request = (Invoke-mrkRestMethod -Method PUT -ResourceID ('/devices/' + $switch.serial + '/switchPorts/' + $port) -Body $body)
-        return $request
-
-    }
-    else{
-
+        if ($mrkApiVersion -eq 'v0'){
+            $ResourceID = "/devices/$($switch.serial)/switchPorts/$port"
+        } Else { #mrkApiVersion v1
+            $ResourceID = "/devices/$($switch.serial)/switch/ports/$port"
+        }
+        Invoke-mrkRestMethod -Method PUT -ResourceID $ResourceID -Body $body
+    } Else {
         Write-Error -Message "Switch doesn't exist."
-
     }
-
 }

@@ -13,6 +13,5 @@ function Remove-MrkNetwork {
     Param (
         [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$networkId
     )
-    $request = Invoke-MrkRestMethod -Method DELETE -ResourceID ('/networks/' + $networkId)
-    return $request
+    Invoke-MrkRestMethod -Method DELETE -ResourceID "/networks/$networkId"
 }

@@ -13,6 +13,9 @@ function Get-MrkNetworkSSID {
     Param (
         [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$networkId
     )
-    $request = Invoke-MrkRestMethod -Method GET -ResourceID ('/networks/' + $networkId + '/ssids')
-    return $request
+    if ($mrkApiVersion -eq 'v0'){
+        Invoke-MrkRestMethod -Method GET -ResourceID "/networks/$networkId/ssids"
+    } Else { #mrkApiVersion v1
+        Write-Host This API call is no longer supported in REST API version v1 -ForegroundColor Yellow
+    }  
 }

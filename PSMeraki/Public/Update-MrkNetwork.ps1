@@ -33,14 +33,17 @@ function Update-MrkNetwork {
     )
 
     if($EnableVlanState){
-        $body = @{
-            enabled = $EnableVlanState
+        if ($mrkApiVersion -eq 'v0'){
+            $body = @{
+                enabled = $EnableVlanState
+            }
+            Invoke-MrkRestMethod -Method PUT -ResourceID "/networks/$networkId/vlansEnabledState" -Body $body;
+        } Else { #mrkApiVersion v1
+            $body = @{
+                vlansEnabled = $EnableVlanState
+            }
+            Invoke-MrkRestMethod -Method PUT -ResourceID "/networks/$networkId/appliance/vlans/settings" -Body $body;
         }
-        #{{baseUrl}}/networks/{{networkId}}
-        $request = Invoke-MrkRestMethod -Method PUT -ResourceID ('/networks/' + $networkId + '/vlansEnabledState') -Body $body;
-        #get the vlan enabled state for the network and add the return as noteproperty to the $request
-
-        return $request
     }
     if($PSCmdlet.ParameterSetName -eq "identity"){
         $body = @{
@@ -48,6 +51,6 @@ function Update-MrkNetwork {
             timeZone = $timeZone
             tags = $tags
         }
-        $request = Invoke-MrkRestMethod -Method PUT -ResourceID ('/networks/' + $networkId) -Body $body;
+        Invoke-MrkRestMethod -Method PUT -ResourceID "/networks/$networkId" -Body $body;
     }
 }

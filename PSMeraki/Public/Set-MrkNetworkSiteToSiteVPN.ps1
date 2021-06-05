@@ -1,4 +1,4 @@
-function Set-MrkNetworkS2sVpn{
+function Set-MrkNetworkSiteToSiteVPN{
     <#
     .SYNOPSIS
     Sets the site2site VPN state and which localSubnet to include/exclude in the tunnel.
@@ -31,6 +31,8 @@ function Set-MrkNetworkS2sVpn{
     .PARAMETER enforce
     (not used yet).
     #>
+    [CmdletBinding()]
+    [Alias("Set-MrkNetworkS2SVpn")]
     param(
         [Parameter(Mandatory)][String]$networkId,
         [Parameter()][String[]]$vpnHubs,
@@ -40,10 +42,15 @@ function Set-MrkNetworkS2sVpn{
         [Parameter()][bool]$enforce=$false
     )
 
-    $s2sVpnConfig = Get-MrkNetworkS2sVpn -networkId $networkId
-
+    #$s2sVpnConfig = Get-MrkNetworkS2sVpn -networkId $networkId
     $hubs = @()
     $subnets = @()
+
+    if ($mrkApiVersion -eq 'v0'){
+        $ResourceID = "/networks/$networkId/siteToSiteVpn"
+    } Else { #mrkApiVersion v1
+        $ResourceID = "/networks/$networkId/appliance/vpn/siteToSiteVpn"
+    }
 
     switch($mode){
         'none' {
@@ -51,16 +58,13 @@ function Set-MrkNetworkS2sVpn{
                 "mode" = $mode
             }
         }
-
         Default {
-
             ForEach ($hubId in $vpnHubs){
                 $hubs += [pscustomobject]@{
                     "hubId" = $hubId
                     "useDefaultRoute" = $false
                 }
             }
-
             #first invoke the rest-call to set the VPN mode; then call the rest-method to retrieve the networks known to meraki for this particular site.
             $body = [pscustomobject]@{
                 "mode" = $mode
@@ -68,10 +72,8 @@ function Set-MrkNetworkS2sVpn{
             if ($mode -eq 'spoke'){
                 $body | Add-Member -MemberType NoteProperty -Name "hubs" -value @($hubs)
             }
-            $request = Invoke-MrkRestMethod -Method PUT -ResourceID ('/networks/' + $networkId + '/siteToSiteVpn') -body $body
-
+            $request = Invoke-MrkRestMethod -Method PUT -ResourceID $ResourceID -body $body
             $localNetworks = (Get-MrkNetworkS2sVpn -networkId $networkId).subnets.localsubnet
-
             foreach($net in $vpnSubnets){
                 #build the $subnets array. $net is constructed like $subnet,$inVpn. e.g: "10.16.48.0/24,yes" or "192.168.128.0/24,no"
                 $useVpn = $false
@@ -89,9 +91,7 @@ function Set-MrkNetworkS2sVpn{
                         "useVpn" = $useVpn
                     }
                 }
-
             }
-
             #validate the entries in $networkSubnets agains the provided $subnets
             $body = [pscustomobject]@{
                 "mode" = $mode
@@ -100,9 +100,5 @@ function Set-MrkNetworkS2sVpn{
             }
         }
     }
-
-    $request = Invoke-MrkRestMethod -Method PUT -ResourceID ('/networks/' + $networkId + '/siteToSiteVpn') -body $body
-
-    return $request
-
+    Invoke-MrkRestMethod -Method PUT -ResourceID $ResourceID -body $body
 }

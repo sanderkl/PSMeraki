@@ -15,6 +15,5 @@ function Get-MrkTemplate {
     Param (
         [Parameter()][String]$orgId = (Get-MrkFirstOrgID)
     )
-    $request = Invoke-MrkRestMethod -Method GET -ResourceID ('/organizations/' + $orgId + '/configTemplates')
-    return $request
+    Invoke-MrkRestMethod -Method GET -ResourceID "/organizations/$orgId/configTemplates"
 }

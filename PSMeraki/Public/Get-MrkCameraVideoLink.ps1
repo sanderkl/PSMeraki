@@ -14,6 +14,5 @@ function Get-MrkCameraVideoLink {
     Param (
         [Parameter()][String]$serial
     )
-    $request = Invoke-MrkRestMethod -Method GET -ResourceID ('/devices/' + $Serial + '/cameras/video_link')
-    return $request
+    Invoke-MrkRestMethod -Method GET -ResourceID "/devices/$Serial/cameras/video_link"
 }
