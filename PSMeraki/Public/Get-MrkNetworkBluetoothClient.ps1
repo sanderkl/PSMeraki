@@ -17,6 +17,5 @@ function Get-MrkNetworkBluetoothClient {
         [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$networkId,
         [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$clientId
     )
-    $request = Invoke-MrkRestMethod -Method GET -ResourceID ('/networks/' + $networkId + '/bluetoothClients/' + $clientId)
-    return $request
+    Invoke-MrkRestMethod -Method GET -ResourceID "/networks/$networkId/bluetoothClients/$clientId"
 }

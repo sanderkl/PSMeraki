@@ -15,6 +15,9 @@ function Get-MrkVPN {
     Param (
         [Parameter()][String]$orgId = (Get-MrkFirstOrgID)
     )
-    $request = Invoke-MrkRestMethod -Method GET -ResourceID ('/organizations/' + $orgId + '/thirdPartyVPNPeers')
-    return $request
+    if ($mrkApiVersion -eq 'v0'){
+        Invoke-MrkRestMethod -Method GET -ResourceID "/organizations/$orgId/thirdPartyVPNPeers"
+    } Else { #mrkApiVersion v1
+        Invoke-MrkRestMethod -Method GET -ResourceID "/organizations/$orgId/appliance/vpn/thirdPartyVPNPeers"
+    }
 }

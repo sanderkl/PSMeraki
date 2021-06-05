@@ -19,7 +19,9 @@ function Get-MrkNetworkMRL3FwRule {
         [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$networkId,
         [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$ssidId
     )
-
-    $request = Invoke-MrkRestMethod -Method GET -ResourceID ('/networks/' + $networkId + '/ssids/' + $ssidId + '/l3FirewallRules')
-    return $request
+    if ($mrkApiVersion -eq 'v0'){
+        Invoke-MrkRestMethod -Method GET -ResourceID "/networks/$networkId/ssids/$ssidId/l3FirewallRules"
+    } Else { #mrkApiVersion v1
+        Invoke-MrkRestMethod -Method GET -ResourceID "/networks/$networkId/ssids/$ssidId/firewall/l3FirewallRules"
+    }
 }

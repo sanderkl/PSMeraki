@@ -21,13 +21,11 @@ function Get-MrkTemplateNetworks {
         [Parameter()][String]$orgId = (Get-MrkFirstOrgID),
         [Parameter()][String]$templateId
     )
-    if($null -eq $templateId -or "" -eq $templateId){
+    if(!$templateId){
         #{{baseUrl}}/organizations/{{organizationId}}/networks
-        $request = Invoke-MrkRestMethod -Method GET -ResourceID ('/organizations/' + $orgId + '/networks')
-        $request = $request | Where-Object {$null -ne $_.configTemplateID}
+        Invoke-MrkRestMethod -Method GET -ResourceID "/organizations/$orgId/networks" | Where-Object {$null -ne $_.configTemplateID}
     } else {
         #{{baseUrl}}/organizations/{{organizationId}}/networks?configTemplateId={{templateId}}
-        $request = Invoke-MrkRestMethod -Method GET -ResourceID ('/organizations/' + $orgId + '/networks?configTemplateId=' + $templateId);
+        Invoke-MrkRestMethod -Method GET -ResourceID "/organizations/$orgId/networks?configTemplateId=$templateId"
     }
-    return $request
 }

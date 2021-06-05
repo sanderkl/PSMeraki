@@ -18,6 +18,5 @@ function Set-MrkNetworkToTemplate {
         "configTemplateId" = $templateID
         "autoBind" = $false
     }
-    $request = Invoke-MrkRestMethod -Method POST -ResourceID ('/networks/' + $networkId + '/bind') -Body $body
-    return $request
+    Invoke-MrkRestMethod -Method POST -ResourceID "/networks/$networkId/bind" -Body $body
 }

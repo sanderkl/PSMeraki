@@ -15,6 +15,5 @@ function Remove-MrkOrgAdmin {
         [Parameter()][String]$orgId = (Get-MrkFirstOrgID),
         [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$adminId
     )
-    $request = Invoke-MrkRestMethod -Method DELETE -ResourceID ('/organizations/' + $orgId + '/admins/' + $adminId)
-    return $request
+    Invoke-MrkRestMethod -Method DELETE -ResourceID "/organizations/$orgId/admins/$adminId"
 }

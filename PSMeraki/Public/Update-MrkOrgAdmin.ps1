@@ -32,6 +32,5 @@ function Update-MrkOrgAdmin {
         "orgAccess" = $orgAccess
         "Tags" = $tags
     }
-    $request = Invoke-MrkRestMethod -Method POST -ResourceID ('/organizations/' + $OrgId + '/admins/') -Body $body
-    return $request
+    Invoke-MrkRestMethod -Method POST -ResourceID "/organizations/$OrgId/admins/" -Body $body
 }

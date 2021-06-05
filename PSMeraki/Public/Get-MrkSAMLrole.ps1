@@ -15,6 +15,5 @@ function Get-MrkSAMLrole {
     Param (
         [Parameter()][String]$OrgId = (Get-MrkFirstOrgID)
     )
-    $request = Invoke-MrkRestMethod -Method GET -ResourceID ('/organizations/' + $orgId + '/samlRoles')
-    return $request
+    Invoke-MrkRestMethod -Method GET -ResourceID "/organizations/$orgId/samlRoles"
 }

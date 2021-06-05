@@ -67,8 +67,11 @@ function Add-MrkNetworkVLAN {
         "reservedIpRanges" = $reservedIpRanges
         "dhcpHandling" = $dhcpHandling
     }
-
-    $request = Invoke-MrkRestMethod -Method POST -ResourceID ('/networks/' + $networkId + '/vlans') -Body $body
+    if ($mrkApiVersion -eq 'v0'){
+        $request = Invoke-MrkRestMethod -Method POST -ResourceID "/networks/$networkId/vlans" -Body $body
+    } Else { #mrkApiVersion v1
+        $request = Invoke-MrkRestMethod -Method POST -ResourceID "/networks/$networkId/appliance/vlans" -Body $body
+    }
 
     #during POST (create new) VLAN the API doesn't handle the setting for DHCP mode other than 'Run a DHCP server'. By default the DHCP mode is enabled. In case the DHCP must be off,
     # the Update-MrkNetworkVLAN function is called to update the Network VLAN DHCP setting using the same variables for the POST action.

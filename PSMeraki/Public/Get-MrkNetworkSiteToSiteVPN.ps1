@@ -10,9 +10,13 @@ function Get-MrkNetworkSiteToSiteVPN {
     specify a networkId, find an id using get-MrkNetworks
     #>
     [CmdletBinding()]
+    [alias("Get-MrkNetworkS2SVpn")]
     Param (
         [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$networkId
     )
-    $request = Invoke-MrkRestMethod -Method GET -ResourceID ('/networks/' + $networkId + '/siteToSiteVpn')
-    return $request
+    if ($mrkApiVersion -eq 'v0'){
+        Invoke-MrkRestMethod -Method GET -ResourceID "/networks/$networkId/siteToSiteVpn"
+    } Else { #mrkApiVersion v1
+        Invoke-MrkRestMethod -Method GET -ResourceID "/networks/$networkId/appliance/vpn/siteToSiteVpn"
+    }
 }

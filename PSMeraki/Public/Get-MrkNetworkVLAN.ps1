@@ -16,12 +16,17 @@ function Get-MrkNetworkVLAN {
         [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$networkId,
         [parameter()][string]$id
     )
-
-    if ($null -eq $id -or "" -eq $id){
-        $request = Invoke-MrkRestMethod -Method GET -ResourceID ('/networks/' + $networkId + '/vlans')
-    }else{
-        $request = Invoke-MrkRestMethod -Method GET -ResourceID ('/networks/' + $networkId + '/vlans/' + $id)
-    }
-
-    return $request
+    if ($mrkApiVersion -eq 'v0'){
+        if ($null -eq $id -or "" -eq $id){
+            Invoke-MrkRestMethod -Method GET -ResourceID "/networks/$networkId/vlans"
+        }else{
+            Invoke-MrkRestMethod -Method GET -ResourceID "/networks/$networkId/vlans/$id"
+        }
+    } Else { #mrkApiVersion v1
+        if ($null -eq $id -or "" -eq $id){
+            Invoke-MrkRestMethod -Method GET -ResourceID "/networks/$networkId/appliance/vlans"
+        }else{
+            Invoke-MrkRestMethod -Method GET -ResourceID "/networks/$networkId/appliance/vlans/$id"
+        }
+    }    
 }

@@ -14,8 +14,9 @@ Function Get-MrkInventory{
     Param (
         [Parameter()][String]$orgId = (Get-MrkFirstOrgID)
     )
-
-    $request = Invoke-MrkRestMethod -Method GET -ResourceID ('/organizations/' + $orgId + '/inventory')
-
-    return $request
+    if ($mrkApiVersion -eq 'v0'){
+        Invoke-MrkRestMethod -Method GET -ResourceID "/organizations/$orgId/inventory"
+    } Else { #mrkApiVersion v1
+        Write-Host This API call is no longer supported in REST API version v1 -ForegroundColor Yellow
+    }
 }

@@ -33,6 +33,5 @@ function New-MrkNetwork {
         "tags" = $tags
         "timeZone" = $timeZone
     }
-    $request = Invoke-MrkRestMethod -Method POST -ResourceID ('/organizations/' + $orgId + '/networks') -Body $body
-    return $request
+    Invoke-MrkRestMethod -Method POST -ResourceID "/organizations/$orgId/networks" -Body $body
 }

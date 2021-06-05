@@ -24,10 +24,14 @@ function Set-MrkDevice {
 	Optional parameter to specify notes on the device, max 255 char
 	.PARAMETER movemapmarker
 	Optional parameter to set the move map marker flag if you use an address instead of a lat/lng. If True, will ignore lat/lng parameters
+    .NOTES
+    2do: parameter 'networkId' should mandatory for a parameter set aimed at the v0 version
+
     #>
+    
     [CmdletBinding()]
     Param (
-        [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$networkId,
+        [Parameter()][ValidateNotNullOrEmpty()][String]$networkId,
         [Parameter(Mandatory)][ValidateNotNullOrEmpty()][Alias("serialNr")][String]$serial,
         [Parameter()][ValidateNotNullOrEmpty()][String]$devicename,
         [Parameter()][string]$address,
@@ -39,13 +43,13 @@ function Set-MrkDevice {
     )
 
     #retrieve current settings from the device and populate $body
-    $deviceProps = Get-MrkDevice -networkID $networkId -Serial $serial;
-    if ("" -eq $devicename){$devicename = $deviceProps.name};
-    if ("" -eq $address){$address = $deviceProps.address};
-    if ("" -eq $tag){$tag = $deviceProps.tags};
-    if ("" -eq $lat){$lat = $deviceProps.lat};
-    if ("" -eq $lng){$lng = $deviceProps.lng};
-    if ("" -eq $notes){$notes = $deviceProps.notes};
+    $deviceProps = Get-MrkDevice -networkID $networkId -Serial $serial
+    if (!$devicename){$devicename = $deviceProps.name}
+    if (!$address){$address = $deviceProps.address}
+    if (!$tag){$tag = $deviceProps.tags}
+    if (!$lat){$lat = $deviceProps.lat}
+    if (!$lng){$lng = $deviceProps.lng}
+    if (!$notes){$notes = $deviceProps.notes}
 
     $body = @{
         "name"=$devicename
@@ -55,11 +59,12 @@ function Set-MrkDevice {
         "address"=$address
         "notes" = $notes
     }
-
     if ($movemapmarker) {$body.Remove('lat');$body.Remove('lng');$body.Add("moveMapMarker",$true)}
-
     convertto-json ($body)
 
-    $request = Invoke-MrkRestMethod -Method PUT -ResourceID ('/networks/' + $networkId + '/devices/' + $serial) -Body $body
-    return $request
+    if ($mrkApiVersion -eq 'v0'){
+        Invoke-MrkRestMethod -Method PUT -ResourceID "/networks/$networkId/devices/$serial" -Body $body
+    } Else { #mrkApiVersion v1
+        Invoke-MrkRestMethod -Method PUT -ResourceID "/devices/$serial" -Body $body
+    }
 }

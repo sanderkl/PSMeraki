@@ -155,7 +155,5 @@ function Set-MrkNetworkSSID {
             $body | Add-Member -MemberType NoteProperty -Name $key -Value $PSBoundParameters.item($key)
         }
     }
-    #$body | convertto-json
-    $request = Invoke-MrkRestMethod -Method PUT -ResourceID ('/networks/' + $networkId + '/ssids/' + $number) -body $body
-    return $request
+    Invoke-MrkRestMethod -Method PUT -ResourceID "/networks/$networkId/ssids/$number" -body $body
 }

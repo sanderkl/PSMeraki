@@ -15,6 +15,9 @@ Function Get-MrkNetworkStaticRoute{
     Param (
         [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$networkId
     )
-    $request = Invoke-MrkRestMethod -Method GET -ResourceID ('/networks/' + $networkId + '/staticRoutes')
-    return $request
+    if ($mrkApiVersion -eq 'v0'){
+        Invoke-MrkRestMethod -Method GET -ResourceID "/networks/$networkId/staticRoutes"
+    } Else { #mrkApiVersion v1
+        Invoke-MrkRestMethod -Method GET -ResourceID "/networks/$networkId/appliance/staticRoutes"
+    }
 }

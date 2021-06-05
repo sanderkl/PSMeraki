@@ -13,6 +13,5 @@ function Get-MrkNetworkGroupPolicy {
     Param (
         [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$networkId
     )
-    $request = Invoke-MrkRestMethod -Method GET -ResourceID ('/networks/' + $networkId + '/groupPolicies')
-    return $request
+    Invoke-MrkRestMethod -Method GET -ResourceID "/networks/$networkId/groupPolicies"
 }

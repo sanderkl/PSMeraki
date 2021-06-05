@@ -13,6 +13,9 @@ function Get-MrkLicenseState {
     Param (
         [Parameter()][String]$orgId = (Get-MrkFirstOrgID)
     )
-    $request = Invoke-MrkRestMethod -Method GET -ResourceID ('/organizations/' + $orgId + '/licenseState')
-    return $request
+    if ($mrkApiVersion -eq 'v0'){
+        Invoke-MrkRestMethod -Method GET -ResourceID "/organizations/$orgId/licenseState"
+    } else { #mrkApiVersion v1
+        Invoke-MrkRestMethod -Method GET -ResourceID "/organizations/$orgId/licenses/overview"
+    }
 }

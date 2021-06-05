@@ -21,15 +21,16 @@ function Get-MrkNetwork {
         [Parameter()][String]$orgId = (Get-MrkFirstOrgID),
         [Parameter()][String]$networkId
     )
-    if($null -eq $networkId -or "" -eq $networkId){
-        #{{baseUrl}}/organizations/{{organizationId}}/networks
-        $request = Invoke-MrkRestMethod -Method GET -ResourceID ('/organizations/' + $orgId + '/networks')
-
+    if(!$networkId){
+        $request = Invoke-MrkRestMethod -Method GET -ResourceID "/organizations/$orgId/networks"
     } else {
-        #{{baseUrl}}/networks/{{networkId}}
-        $request = Invoke-MrkRestMethod -Method GET -ResourceID ('/networks/' + $networkId);
+        $request = Invoke-MrkRestMethod -Method GET -ResourceID "/networks/$networkId"
         #get the vlan enabled state for the network and add the return as noteproperty to the $request
-        $vlansEnabledState = (Invoke-MrkRestMethod -Method GET -ResourceID ('/networks/' + $networkId + '/vlansEnabledState')).enabled;
+        if ($mrkApiVersion -eq 'v0'){
+            $vlansEnabledState = (Invoke-MrkRestMethod -Method GET -ResourceID "/networks/$networkId/vlansEnabledState").enabled
+        } else { #mrkApiVersion v1
+            $vlansEnabledState = (Invoke-MrkRestMethod -Method GET -ResourceID "/networks/$networkId/appliance/vlans/settings").enabled
+        }
         $request | Add-Member -MemberType NoteProperty -Name vlansEnabledState -Value $vlansEnabledState
     }
     return $request

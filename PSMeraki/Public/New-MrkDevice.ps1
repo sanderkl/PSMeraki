@@ -20,6 +20,5 @@ function New-MrkDevice {
     $body = @{
         "serial" = $serial
     }
-    $request = Invoke-MrkRestMethod -Method POST -ResourceID ('/networks/' + $networkId + '/devices/claim') -Body $body
-    return $request
+    Invoke-MrkRestMethod -Method POST -ResourceID "/networks/$networkId/devices/claim" -Body $body
 }

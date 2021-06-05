@@ -15,6 +15,9 @@ function Get-MrkDevicesStatus {
     Param (
         [Parameter()][String]$orgId = (Get-MrkFirstOrgID)
     )
-    $request = Invoke-MrkRestMethod -Method GET -ResourceID ('/organizations/' + $orgId + '/deviceStatuses')
-    return $request
+    if ($mrkApiVersion -eq 'v0'){
+        Invoke-MrkRestMethod -Method GET -ResourceID "/organizations/$orgId/deviceStatuses"
+    } Else { #mrkApiVersion v1
+        Invoke-MrkRestMethod -Method GET -ResourceID "/organizations/$orgId/devices/statuses"
+    }
 }

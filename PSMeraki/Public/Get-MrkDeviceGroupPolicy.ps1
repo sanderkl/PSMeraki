@@ -17,6 +17,5 @@ function Get-MrkDeviceGroupPolicy {
         [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$networkId,
         [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$clientMac
     )
-    $request = Invoke-MrkRestMethod -Method GET -ResourceID ('/networks/' + $networkId + '/clients/' + $clientMac + '/policy?timespan=86400')
-    return $request
+    Invoke-MrkRestMethod -Method GET -ResourceID "/networks/$networkId/clients/$clientMac/policy?timespan=86400"
 }

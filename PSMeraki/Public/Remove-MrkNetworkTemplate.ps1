@@ -13,6 +13,5 @@ function Remove-MrkNetworkTemplate {
     Param (
         [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$networkId
     )
-    $request = Invoke-MrkRestMethod -Method POST -ResourceID ('/networks/' + $networkId + '/unbind/')
-    return $request
+    Invoke-MrkRestMethod -Method POST -ResourceID "/networks/$networkId/unbind/"
 }
