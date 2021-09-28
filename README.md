@@ -87,6 +87,7 @@ Get-MrkDeviceClient
 Get-MrkDeviceGroupPolicy
 Get-MrkDevicesStatus
 Get-MrkInventory
+Get-MrkLicenses
 Get-MrkLicenseState
 Get-MrkNetwork
 Get-MrkNetworkBluetoothClient
