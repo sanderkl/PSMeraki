@@ -1,0 +1,25 @@
+Function Get-MrkUplinksStatus
+{
+	<#
+    .SYNOPSIS
+    Retrieves all appliances statuses for a Meraki Organization
+    .DESCRIPTION
+    Gets a list of all appliances statuses for a Meraki organization.
+    .EXAMPLE
+    Get-MrkUplinksStatus
+    .EXAMPLE
+    Get-MrkUplinksStatus -OrgId 111222
+    .PARAMETER OrgId
+    optional parameter specify an OrgId, default it will take the first OrgId retrieved from Get-MrkOrganizations
+    #>
+	[CmdletBinding()]
+	param (
+		[Parameter()][String]$orgId = (Get-MrkFirstOrgID)
+	)
+	
+	if ($mrkApiVersion -eq 'v0'){
+        Write-Host This API call is not supported in REST API version v0 -ForegroundColor Yellow
+    } Else { #mrkApiVersion v1
+        Invoke-MrkRestMethod -Method GET -ResourceID "/organizations/$orgId/appliance/uplink/statuses"
+    }
+}
