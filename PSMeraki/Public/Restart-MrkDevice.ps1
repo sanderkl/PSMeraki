@@ -17,8 +17,8 @@ function Restart-MrkDevice {
         [Parameter()][ValidateNotNullOrEmpty()][String]$networkId
     )
     if ($mrkApiVersion -eq 'v0'){
-        Invoke-MrkRestMethod -Method GET -ResourceID "/networks/$networkId/devices/$Serial/reboot"
+        Invoke-MrkRestMethod -Method POST -ResourceID "/networks/$networkId/devices/$Serial/reboot"
     } Else { #mrkApiVersion v1
-        Invoke-MrkRestMethod -Method GET -ResourceID "/devices/$Serial/reboot"
+        Invoke-MrkRestMethod -Method POST -ResourceID "/devices/$Serial/reboot"
     }
 }

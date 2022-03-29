@@ -1,7 +1,13 @@
 # PSMeraki
 
-This is a PowerShell module for Cisco Meraki REST API \([link](https://documenter.getpostman.com/view/897512/meraki-dashboard-api/2To9xm#a5b91474-d9da-c345-cf0e-5c828475686d)\). 
+This is a PowerShell module for Cisco Meraki REST API \([documentation](https://developer.cisco.com/meraki/api-v1/#!overview)\). 
 Not all avaiable Meraki REST API functions are included in this module.
+
+New in v2.0.1 (NOVEMBER 2021):
+
+- Reboot-Device fixed, now is a POST request (thanks @andrewzirkel)
+- Added missing public functions. (thanks @StingzLD)
+- Updated Cisco Meraki REST API documentation link. 
 
 New in v2.0 (JUNE 2021):
 
