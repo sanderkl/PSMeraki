@@ -12,7 +12,7 @@
 RootModule = '.\PSMeraki.psm1'
 
 # Version number of this module.
-ModuleVersion = '2.0.1'
+ModuleVersion = '2.0.2'
 
 # Supported PSEditions
 # CompatiblePSEditions = @()
@@ -71,8 +71,8 @@ Description = 'PowerShell Module for Cisco Meraki REST API'
 # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
 FunctionsToExport = 'Add-MrkNetworkStaticRoute', 'Add-MrkNetworkVLAN', 
                'Get-MrkCameraVideoLink', 'Get-MrkDevice', 'Get-MrkDeviceClient', 
-               'Get-MrkDeviceGroupPolicy', 'Get-MrkDevicesStatus', 
-               'Get-MrkInventory', 'Get-MrkLicenseState', 'Get-MrkNetwork', 
+               'Get-MrkDeviceGroupPolicy', 'Get-MrkDevicesStatus', 'Get-MrkInventory', 
+               'Get-MrkLicenses', 'Get-MrkLicenseState', 'Get-MrkNetwork', 
                'Get-MrkNetworkBluetoothClient', 'Get-MrkNetworkDevice', 
                'Get-MrkNetworkGroupPolicy', 'Get-MrkNetworkMRL3FwRule', 
                'Get-MrkNetworkMxCfRule', 'Get-MrkNetworkMXL3FwRule', 
@@ -96,8 +96,8 @@ FunctionsToExport = 'Add-MrkNetworkStaticRoute', 'Add-MrkNetworkVLAN',
 # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
 CmdletsToExport = 'Add-MrkNetworkStaticRoute', 'Add-MrkNetworkVLAN', 
                'Get-MrkCameraVideoLink', 'Get-MrkDevice', 'Get-MrkDeviceClient', 
-               'Get-MrkDeviceGroupPolicy', 'Get-MrkDevicesStatus', 
-               'Get-MrkInventory', 'Get-MrkLicenseState', 'Get-MrkNetwork', 
+               'Get-MrkDeviceGroupPolicy', 'Get-MrkDevicesStatus', 'Get-MrkInventory', 
+               'Get-MrkLicenses', 'Get-MrkLicenseState', 'Get-MrkNetwork', 
                'Get-MrkNetworkBluetoothClient', 'Get-MrkNetworkDevice', 
                'Get-MrkNetworkGroupPolicy', 'Get-MrkNetworkMRL3FwRule', 
                'Get-MrkNetworkMxCfRule', 'Get-MrkNetworkMXL3FwRule', 
