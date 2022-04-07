@@ -70,7 +70,7 @@ Description = 'PowerShell Module for Cisco Meraki REST API'
 
 # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
 FunctionsToExport = 'Add-MrkNetworkStaticRoute', 'Add-MrkNetworkVLAN', 
-               'Get-MrkCameraVideoLink', 'Get-MrkDevice', 'Get-MrkDeviceClient', 
+               'Get-MrkCameraVideoLink', 'Get-MrkDevice', 'Add-MrkSAMLrole', 'Get-MrkDeviceClient', 
                'Get-MrkDeviceGroupPolicy', 'Get-MrkDevicesStatus', 
                'Get-MrkInventory', 'Get-MrkLicenseState', 'Get-MrkNetwork', 
                'Get-MrkNetworkBluetoothClient', 'Get-MrkNetworkDevice', 
@@ -95,7 +95,7 @@ FunctionsToExport = 'Add-MrkNetworkStaticRoute', 'Add-MrkNetworkVLAN',
 
 # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
 CmdletsToExport = 'Add-MrkNetworkStaticRoute', 'Add-MrkNetworkVLAN', 
-               'Get-MrkCameraVideoLink', 'Get-MrkDevice', 'Get-MrkDeviceClient', 
+               'Get-MrkCameraVideoLink', 'Get-MrkDevice', 'Add-MrkSAMLrole', 'Get-MrkDeviceClient', 
                'Get-MrkDeviceGroupPolicy', 'Get-MrkDevicesStatus', 
                'Get-MrkInventory', 'Get-MrkLicenseState', 'Get-MrkNetwork', 
                'Get-MrkNetworkBluetoothClient', 'Get-MrkNetworkDevice', 
@@ -116,7 +116,7 @@ CmdletsToExport = 'Add-MrkNetworkStaticRoute', 'Add-MrkNetworkVLAN',
                'Set-MrkRestApiVersion', 'Set-MrkSwitchPort', 'Update-MrkDevice', 
                'Update-MrkNetwork', 'Update-MrkNetworkMRL3FwRule', 
                'Update-MrkNetworkMXL3FwRule', 'Update-MrkNetworkMXL7FwRule', 
-               'Update-MrkNetworkVLAN', 'Update-MrkOrgAdmin'
+               'Update-MrkNetworkVLAN', 'Update-MrkOrgAdmin','Add-MrkSAMLrole'
 
 # Variables to export from this module
 # VariablesToExport = @()
