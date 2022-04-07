@@ -14,7 +14,7 @@ function Add-MrkSAMLrole {
     .PARAMETER networkID
     Optional, specify the network ID to target specific networks.
     .PARAMETER networkAccess
-    Optional, specify the access level for the networkID either 'full' 'read-only' or 'none'.
+    Optional, specify the access level for the networkID either 'full' 'read-only' 'guest-ambassador' or 'monitor-only'
     .PARAMETER tags
     see rest api diucs for details.
     .NOTES
