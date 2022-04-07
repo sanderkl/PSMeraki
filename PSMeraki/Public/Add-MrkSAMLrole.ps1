@@ -26,7 +26,7 @@ function Add-MrkSAMLrole {
         [Parameter(Mandatory)][ValidateNotNullOrEmpty()][String]$Role,
         [Parameter(Mandatory)][ValidateSet('full','read-only','none')][String]$orgAccess,
         [Parameter()][ValidateNotNullOrEmpty()][String]$networkID,
-        [Parameter()][ValidateSet('full','read-only','none')][String]$networkAccess,
+        [Parameter()][ValidateSet('full','read-only','guest-ambassador','monitor-only')][String]$networkAccess,
         [Parameter()][ValidateNotNullOrEmpty()][String]$tags
     )
     $body  = @{
